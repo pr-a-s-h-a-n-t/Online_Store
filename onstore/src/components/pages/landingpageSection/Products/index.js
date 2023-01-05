@@ -1,9 +1,10 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DarkmodeContext } from "../../../../contex/darkmode/index";
-
+import loadingGif from "../../../../assets/loading.gif";
 import { Grid } from "@mui/material";
 import SolutionCard from "./solutioncart/index";
 //  import Card from "../Testproduct/Card";
+import loadingPrimarycolorThem from "../../../../assets/loadingPrimarycolorThem.gif";
 
 function Products() {
   const [state, dispatch] = React.useContext(DarkmodeContext);
@@ -18,7 +19,7 @@ function Products() {
   }, []);
 
   const mystore = async () => {
-    const res = await fetch('https://fakestoreapi.com/products');
+    const res = await fetch("https://fakestoreapi.com/products");
     // const res = await fetch("https://api.escuelajs.co/api/v1/products ");
 
     // https://api.escuelajs.co/api/v1/products
@@ -33,43 +34,54 @@ function Products() {
   console.log(store);
 
   return (
-    <div
-      style={{
-        color: state.shades.secondary,
-        backgroundColor: state.shades.primary,
-      }}
-      className="onePlateform-container"
-    >
-      <h1>
-        One Plateform many <span>Solution</span>
-      </h1>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "50px",
-        }}
-      >
-        {store.map((e, i) => (
-          <SolutionCard
-            title={e.title}
-            description={e.description}
-            icon={e.icon}
-            key={i}
-            price={e.price}
-            rating={e.rating}
-            image={e.image}
-             
-          />
-           
-          
-        ))}
-        
-      </Grid>
-    </div>
+    <>
+      <h1>Our Production</h1>
+
+      {store && store.length === 0 ? (
+        state.mode === "dark" ? (
+          <div>
+            <img src={loadingPrimarycolorThem} alt="Loading Cart Items" />
+          </div>
+        ) : (
+          <div>
+            <img src={loadingGif} alt="Loading Cart Items" />
+          </div>
+        )
+      ) : store && store.length > 0 ? (
+        <div
+          style={{
+            color: state.shades.secondary,
+            backgroundColor: state.shades.primary,
+          }}
+          className="onePlateform-container"
+        >
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "50px",
+            }}
+          >
+            {store.map((e, i) => (
+              <SolutionCard
+                title={e.title}
+                description={e.description}
+                icon={e.icon}
+                key={i}
+                price={e.price}
+                rating={e.rating}
+                image={e.image}
+              />
+            ))}
+          </Grid>
+        </div>
+      ) : (
+        <div>No Products</div>
+      )}
+    </>
   );
 }
 
