@@ -35,7 +35,7 @@ function Products() {
 
   return (
     <>
-      <h1>Our Production</h1>
+      <h1>Our Product</h1>
 
       {store && store.length === 0 ? (
         state.mode === "dark" ? (
