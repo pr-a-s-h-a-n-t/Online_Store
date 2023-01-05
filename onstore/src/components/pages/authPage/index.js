@@ -36,23 +36,24 @@ export default function UserAuth() {
       <Grid
         item
         sm={12}
-        md={12}
+        // md={12}
         style={{
-          width: "90%",
-          height: "100%",
+          maxWidth: "80%",
+          // height: "100%",
           margin: "auto",
+          boxShadow: "border-box",
         }}
       >
         <img
           style={{
-            width: "100%",
-            height: "10rem",
+            width: "clamp(8rem, 80vw, 80%)",
+            height: "50vh",
             alignItems: "center",
             justifyContent: "center",
             margin: "auto",
           }}
           src={GoogleLogo}
-          alt=""
+          alt="Google Logo"
         />
       </Grid>
       <Grid item sm={12} md={12}>
