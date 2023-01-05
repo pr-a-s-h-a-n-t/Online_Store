@@ -13,6 +13,9 @@ import {
 import AboutPage from "../components/pages/aboutpage";
 import Account from "../components/pages/Account";
 import Profile from "../components/pages/Account";
+import UserAuth from "../components/pages/authPage/index";
+
+
 
 function Navs() {
   return (
@@ -29,6 +32,14 @@ function Navs() {
               </HocNavigation>
             }
           />
+           <Route
+            path="/auth"
+            // index
+            element={
+              <HocNavigation>
+                <UserAuth />
+              </HocNavigation>
+            } />
           {/* <Route path="/" element={<LandingPage />} /> */}
           {/* <HocNavigation /> */}
           {/* <LandingPage /> */}

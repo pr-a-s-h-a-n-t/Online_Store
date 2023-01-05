@@ -35,6 +35,10 @@ const pages = [
     name: <LocalMallIcon />,
     path: "/cart",
   },
+  {
+    name: "LogIn",
+    path: "/auth",
+  },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 

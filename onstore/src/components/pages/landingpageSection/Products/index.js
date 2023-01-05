@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DarkmodeContext } from "../../../../contex/darkmode/index";
 import loadingGif from "../../../../assets/loading.gif";
 import { Grid } from "@mui/material";
-import SolutionCard from "./solutioncart/index";
+import ProductCard from "./ProductCard/index";
 //  import Card from "../Testproduct/Card";
 import loadingPrimarycolorThem from "../../../../assets/loadingPrimarycolorThem.gif";
 
@@ -33,18 +33,66 @@ function Products() {
 
   console.log(store);
 
+
+  const handleClick = (cartItem) => {
+    // let isPresent = false;
+    // cart.forEach((product) => {
+    //   if (item.id === product.id)
+    //     isPresent = true;
+    // })
+    // if (isPresent) {
+    //   setWarning(true);
+    //   alert("Item is already added to your cart")
+    //   setTimeout(() => {
+    //     setWarning(false);
+    //   }, 2000);
+    //   return;
+    // }
+    // setCart([...cart, item]);
+    console.log("this product is added to cart", cartItem);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <>
       <h1>Our Product</h1>
 
       {store && store.length === 0 ? (
         state.mode === "dark" ? (
-          <div>
-            <img src={loadingPrimarycolorThem} alt="Loading Cart Items" />
+          <div
+            style={{
+              width: "90%",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "auto",
+            }}
+          >
+            <img
+              width="100%"
+              src={loadingPrimarycolorThem}
+              alt="Loading Cart Items"
+            />
           </div>
         ) : (
           <div>
-            <img src={loadingGif} alt="Loading Cart Items" />
+            <img width="100%" src={loadingGif} alt="Loading Cart Items" />
           </div>
         )
       ) : store && store.length > 0 ? (
@@ -65,15 +113,12 @@ function Products() {
               marginTop: "50px",
             }}
           >
-            {store.map((e, i) => (
-              <SolutionCard
-                title={e.title}
-                description={e.description}
-                icon={e.icon}
+            {store.map((product, i) => (
+              <ProductCard
                 key={i}
-                price={e.price}
-                rating={e.rating}
-                image={e.image}
+                product={product}
+              
+                handelClick={handleClick}
               />
             ))}
           </Grid>

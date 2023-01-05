@@ -1,10 +1,28 @@
 import { Button, Grid } from "@mui/material";
 import React from "react";
-import "./SolutionCard.css";
+import "./ProductCard.css";
 import { DarkmodeContext } from "../../../../../contex/darkmode/index";
-
-function SolutionCard({ title, description, icon, price, rating, image }) {
+import Notification from "../../../../../utils/Notifications"
+function SolutionCard({ product, handleClick }) {
   const [state, dispatch] = React.useContext(DarkmodeContext);
+
+
+const addToCard= function( product){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <Grid
@@ -12,13 +30,11 @@ function SolutionCard({ title, description, icon, price, rating, image }) {
         color: state.shades.secondary,
         backgroundColor: state.shades.primary,
       }}
-      
       item
       xs={12}
       sm={8}
       md={4}
     >
-    
       <div
         style={{
           color: state.shades.secondary,
@@ -30,13 +46,13 @@ function SolutionCard({ title, description, icon, price, rating, image }) {
           <img
             style={{ marginRight: "10px", maxWidth: "10rem" }}
             alt="icon"
-            src={image}
+            src={product.image}
           />
         </div>
         <Grid container>
           <div className="card-details">
-            <div className="title">{title}</div>
-            <div className="price">Price- {price}$</div>
+            <div className="title">{product.title}</div>
+            <div className="price">Price- {product.price}$</div>
             <div className="rating-btn-container">
               {/* <span>
               <svg
@@ -101,12 +117,13 @@ function SolutionCard({ title, description, icon, price, rating, image }) {
               </svg>
             </span> */}
 
-              <Grid item sm={12}  >
-                <span className="rating-span">{rating.rate}⭐ </span>
-                <span className="review-span">{rating.count} Ratings</span>
+              <Grid item sm={12}>
+                <span className="rating-span">{product.rating.rate}⭐ </span>
+                <span className="review-span">
+                  {product.rating.count} Ratings
+                </span>
               </Grid>
-              <Grid item sm={12} md={12} lg={12}
-               >
+              <Grid item sm={12} md={12} lg={12}>
                 <Button
                   sx={{
                     color: "inherit",
@@ -114,6 +131,10 @@ function SolutionCard({ title, description, icon, price, rating, image }) {
                     fontWeight: "bold",
                     // marginRight: "8px",
                     width: "100%",
+                  }}
+                  onClick={() => {
+                    console.log("this product is added to cart", product);
+                    addToCard(product);
                   }}
                 >
                   Add To Cart
