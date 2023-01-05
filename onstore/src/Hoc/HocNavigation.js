@@ -26,8 +26,8 @@ const pages = [
   },
   
   {
-    name: "Account",
-    path: "/account",
+    name: "Profile",
+    path: "/profile",
   },
   {
     name: "Cart",
@@ -36,7 +36,7 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-function CandidateHoc({ children }) {
+function HocNavigation({ children }) {
   const navigate = useNavigate();
   
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -217,4 +217,4 @@ function CandidateHoc({ children }) {
   );
 }
 
-export default CandidateHoc;
+export default HocNavigation;
