@@ -8,10 +8,10 @@ import Products from './landingpageSection/Products'
 function LandingPage() {
   return (
     <div>
-        {/* <Navigation /> */}
+         
         <Hero />
-        <Footer />
         <Products />
+        <Footer />
     </div>
   )
 }

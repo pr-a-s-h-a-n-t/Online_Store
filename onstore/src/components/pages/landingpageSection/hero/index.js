@@ -45,8 +45,6 @@ function Hero() {
         <div className="heading-container">
           <motion.h1
             className="big-heading"
-            initial={{ opacity: 0, y: 50 }}
-            // animate={{ opacity: 4, y: 0 }}
             animate={{ rotate: -370 }}
             transition={{ type: " spring ", duration: 1 }}
           >
