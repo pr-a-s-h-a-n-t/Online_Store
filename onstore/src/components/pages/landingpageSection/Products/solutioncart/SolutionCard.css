@@ -1,0 +1,51 @@
+.solutionCard-container {
+    height: 300px;
+    max-width: 90%;
+    margin: auto;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 1rem;
+
+
+
+}
+.img-container{
+    height: 65%;
+    width: 100%;
+
+}
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.solutionCard-container:hover {
+    /* background: violet; */
+    color: red !important;
+}
+
+.solutionCard-title :first-child {
+    font-weight: 400;
+    color: inherit;
+    font-size: clamp(15px, 1.7vw, 25px);
+    line-height: clamp(15px, 1.8vw, 29px);
+    /* color: #000000; */
+}
+
+.solutionCard-title :first-child:hover {
+    /* color: #FFFFFF; */
+}
+
+.solutionCard-title :last-child {
+    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(10px, 1.2vw, 18px);
+    /* color: #000000; */
+}
