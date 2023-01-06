@@ -16,6 +16,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import ModeToggle from "../components/common/ModeToggle";
 import { DarkmodeContext } from "../contex/darkmode/index";
+import { Login } from "@mui/icons-material";
 
 const pages = [
   {
@@ -67,6 +68,24 @@ function HocNavigation({ children }) {
   const handleNavigate = (path) => {
     navigate(`${path}`);
   };
+
+  let user = JSON.parse(localStorage.getItem("user"));
+let filterNav;
+ 
+ if (user) {
+    filterNav = pages.filter((page) => {
+      return page.name !== "LogIn";
+    });
+
+    console.log("this is filternav", filterNav);
+  } else {
+    filterNav = pages.filter((page) => {
+      return page.name !== "Profile";
+    });
+
+    console.log("this is filternav", filterNav);
+  }
+  // console.log("this is all nav",pages);
 
   return (
     <div
@@ -143,21 +162,37 @@ function HocNavigation({ children }) {
                   },
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem
-                    key={page.name}
-                    onClick={() => handleNavigate(page.path)}
-                  >
-                    <Typography
-                      sx={{
-                        color: state.shades.secondary,
-                      }}
-                      textAlign="center"
-                    >
-                      {page.name}
-                    </Typography>
-                  </MenuItem>
-                ))}
+                {filterNav && filterNav.length > 0
+                  ? filterNav.map((page) => (
+                      <MenuItem
+                        key={page.name}
+                        onClick={() => handleNavigate(page.path)}
+                      >
+                        <Typography
+                          sx={{
+                            color: state.shades.secondary,
+                          }}
+                          textAlign="center"
+                        >
+                          {page.name}
+                        </Typography>
+                      </MenuItem>
+                    ))
+                  : pages.map((page) => (
+                      <MenuItem
+                        key={page.name}
+                        onClick={() => handleNavigate(page.path)}
+                      >
+                        <Typography
+                          sx={{
+                            color: state.shades.secondary,
+                          }}
+                          textAlign="center"
+                        >
+                          {page.name}
+                        </Typography>
+                      </MenuItem>
+                    ))}
               </Menu>
 
               <Box
@@ -186,7 +221,25 @@ function HocNavigation({ children }) {
                 justifyContent: "center",
               }}
             >
-              {pages.map((page) => (
+              {/* {pages.map((page) => ( */}
+              {
+                filterNav && filterNav.length > 0 
+                ? filterNav.map((page) =>(
+                  <Button
+                  key={page.name}
+                  onClick={() => handleNavigate(page.path)}
+                  sx={{
+                    my: 2,
+
+                    display: "block",
+                    padding: "0 2rem",
+                    // color: state.shades.secondary,
+                  }}
+                >
+                  {page.name}
+                </Button>
+                )) : 
+                pages.map((page) => (
                 <Button
                   key={page.name}
                   onClick={() => handleNavigate(page.path)}

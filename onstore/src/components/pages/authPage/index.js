@@ -10,7 +10,7 @@ import { Button, Grid } from "@mui/material";
 import { auth } from "../../../firebaseConfig/index";
 import GoogleLogo from "../../../assets/GoogleLogo.png";
 import { Notification } from "../../../utils/Notifications";
- 
+
 import {
   getStorage,
   ref,
@@ -24,12 +24,12 @@ export default function UserAuth() {
     userImage: "",
     userPhone: "",
   });
- 
+
   const navigateUser = useNavigate();
- 
+
   const signIn = () => {
     const provider = new GoogleAuthProvider();
- 
+
     signInWithPopup(auth, provider)
       .then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -37,48 +37,54 @@ export default function UserAuth() {
         const user = result.user;
         const uid = user.uid;
         localStorage.setItem("user", JSON.stringify(user));
-          // we cant do this directly because state will not update it will show
+        // navigateUser("/profile");
+
+        // we cant do this directly because state will not update it will show
         // previous set values ex(
-          // in customerData i have set initial value userName: "",userEmail: "",userImage: "",userPhone: "",
-          // so this values will not update in firestore because this is how 
-          // react stat works.
-          // ******* Important********
-          // we are creating new object and then assiging this value to 
-          // setUserData .
-          // After that uploading   userData to firestore with collection name user userInfo.
-          
-   
+        // in customerData i have set initial value userName: "",userEmail: "",userImage: "",userPhone: "",
+        // so this values will not update in firestore because this is how
+        // react stat works.
+        // ******* Important********
+        // we are creating new object and then assiging this value to
+        // setUserData .
+        // After that uploading   userData to firestore with collection name user userInfo.
+
+        //
         const userData = {
           userName: user.displayName,
           userEmail: user.email,
           userImage: user.photoURL,
         };
 
-        // console.log( "test", userData.userName, userData.userEmail, userData.userImage);
+        // // console.log( "test", userData.userName, userData.userEmail, userData.userImage);
 
         setCustomerData(userData);
         console.log("user data has been saved in local state", userData);
- 
         try {
           await setDoc(doc(db, "userInfo", uid), {
             ...userData,
             type: "customer",
           });
-          Notification({ message: "profile created successfully" });
+          Notification({
+            message: "profile created successfully",
+            type: "success",
+          });
           navigateUser("/profile");
-          console.log("data saved in firebase", userData);
+          // console.log("data saved in firebase", userData);
+          console.log("I set the user data");
         } catch (err) {
           console.log(err);
           Notification({ message: "something went wrong", type: "danger" });
         }
- 
+
         console.log(result, "result ");
       })
       .catch((error) => {
         console.log(error);
+        Notification({ message: "something went wrong", type: "danger" });
       });
   };
- 
+
   return (
     <Grid container display="flex" flexDirection="column" marginTop="4rem">
       <Grid
@@ -125,4 +131,3 @@ export default function UserAuth() {
     </Grid>
   );
 }
- 

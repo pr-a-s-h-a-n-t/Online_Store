@@ -3,26 +3,28 @@
   display: flex;
   margin: 10px;
 }
-.onboarding-container {
-  max-width: 80%;
+.profile-container {
+  max-width: 70%;
   background: #ffffff;
   box-shadow: 0px 8px 24px rgb(0 0 0 / 15%);
   border-radius: 8px;
-  margin: 20px auto;
+  margin: 3rem auto;
   padding: 20px;
+  box-sizing: border-box;
 }
 .btn-container {
   display: flex;
-
-  flex-direction: column;
-  width: 100%;
-  justify-content: flex-end;
   margin: auto;
+  justify-content: center;
+  align-items: center;
+
+  max-width: 100%;
 }
 .btn-container button {
   background: greenyellow;
   border-radius: 8px;
-  width: 6rem;
+  width: 30%;
+
   height: 2rem;
   color: white;
   padding: 10px 20px;
@@ -40,11 +42,13 @@
   justify-content: space-between;
   align-items: center;
 }
+ 
+
 .logo-img {
   background-size: cover;
   background-position: center;
-  width: 100px;
-  height: 100px;
+  width: clamp(80px, 5vw, 150px);
+  height: clamp(80px, 5vh, 150px);
 }
 
 .logo-img:hover {
