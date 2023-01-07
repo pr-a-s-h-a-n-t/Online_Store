@@ -6,16 +6,45 @@ import ProductCard from "./ProductCard/index";
 //  import Card from "../Testproduct/Card";
 import loadingPrimarycolorThem from "../../../../assets/loadingPrimarycolorThem.gif";
 
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../../../../firebaseConfig/index";
+import { v4 as uuid } from "uuid";
+import { Notification } from "../../../../utils/Notifications";
+
 function Products() {
   const [state, dispatch] = React.useContext(DarkmodeContext);
-  const dataList = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24, 25,
-  ];
 
   const [store, setStore] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
+  // const [tempData, setTempData] = useState([
+  //   {
+  //     product_id :"",
+  //     apiDefaultProduct_id: "",
+  //     customer_id: "",
+
+  //     // status: "added",
+  //     // createdAt: new Date(),
+  //     product_title:""  ,
+  //     product_price:  "",
+  //     product_amount:""  ,
+  //     product_image:  "",
+  //     customer_name: "",
+  //     customer_email: "",
+  //   },
+  // ]);
+
+
   useEffect(() => {
     mystore();
+    // fetchData();
   }, []);
 
   const mystore = async () => {
@@ -31,43 +60,110 @@ function Products() {
     setStore(jsondata);
   };
 
-  console.log(store);
+  // const fetchData = async () => {
+  //   const q = query(collection(db, "cartproducts"));
+  //   const querySnapshot = await getDocs(q);
+  //   let addedProducts = [];
+  //   querySnapshot.forEach((doc) => {
+  //     addedProducts.push(doc.data());
+  //   });
+  //   setCartProducts(addedProducts);
+  // };
 
+  // console.log(store);
+  console.log("added products in database", cartProducts);
 
-  const handleClick = (cartItem) => {
-    // let isPresent = false;
-    // cart.forEach((product) => {
-    //   if (item.id === product.id)
-    //     isPresent = true;
-    // })
-    // if (isPresent) {
-    //   setWarning(true);
-    //   alert("Item is already added to your cart")
-    //   setTimeout(() => {
-    //     setWarning(false);
-    //   }, 2000);
-    //   return;
-    // }
-    // setCart([...cart, item]);
-    console.log("this product is added to cart", cartItem);
-  }
+  let addToCart = async (cartItem) => {
+    let userInfo = JSON.parse(localStorage.getItem("user"));
+    let customer_id = userInfo.uid;
+    let product_id = uuid();
+    // let job_id = uuidv4();
+    console.log(userInfo);
+    console.log(cartItem, "added to cart");
 
+    // let product_id = uuid();
 
+    if (cartItem) {
+      try {
+        // fetch the customer info from the customer collection
+        const customer = await getDoc(doc(db, "userInfo", customer_id));
+        console.log(customer.data(), "ssss this is a customer info");
+        let customer_name = customer.data().userName;
+        let customer_email = customer.data().userEmail;
+        // let customer_name=customer.data().name;
+        let product_id = uuid();
+        // let product_details = [
+        //   {
+        //     product_id,
+        //     apiDefaultProduct_id: "",
+        //     customer_id: "",
 
+        //     // status: "added",
+        //     // createdAt: new Date(),
+        //     product_title:""  ,
+        //     product_price:  "",
+        //     product_amount:""  ,
+        //     product_image:  "",
+        //     customer_name,
+        //     customer_email,
+        //   },
+        // ];
+        // setTempData((data) => [{
+        //   // ...data, 
+        //   product_id  ,
+        //   apiDefaultProduct_id: cartItem.id,
+        //   customer_id: customer_id,
+           
+        //   status: "added",
+        //   createdAt: new Date(),
+        //   product_title: cartItem.title,
+        //   product_price: cartItem.price,
+        //   product_amount: cartItem.amount,
+        //   product_image: cartItem.image,
+        //   customer_name,
+        //   customer_email,
+        // }])
+        // console.log("this is a temporary data store" ,tempData)
 
+        await setDoc(doc(db, "cartproducts", customer_id), {
+          //  ...tempData,
+          product_id  ,
+          apiDefaultProduct_id: cartItem.id,
+          customer_id: customer_id,
+           
+          status: "added",
+          createdAt: new Date(),
+          product_title: cartItem.title,
+          product_price: cartItem.price,
+          product_amount: cartItem.amount,
+          product_image: cartItem.image,
+          customer_name,
+          customer_email,
+            
+        });
+      } catch (err) {
+        console.log(err);
+        Notification({
+          message: "some thing went wrong",
+          type: "danger",
+        });
+      }
 
+      Notification({
+        message: "Added to Cart ",
+        type: "success",
+      });
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    console.log(
+      "this product is added to cart",
+      cartItem.name,
+      cartItem.title,
+      cartItem.price,
+      cartItem.amount,
+      cartItem.image
+    );
+  };
 
   return (
     <>
@@ -114,12 +210,7 @@ function Products() {
             }}
           >
             {store.map((product, i) => (
-              <ProductCard
-                key={i}
-                product={product}
-              
-                handelClick={handleClick}
-              />
+              <ProductCard key={i} product={product} addToCart={addToCart} />
             ))}
           </Grid>
         </div>

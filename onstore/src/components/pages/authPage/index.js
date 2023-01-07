@@ -64,6 +64,7 @@ export default function UserAuth() {
           await setDoc(doc(db, "userInfo", uid), {
             ...userData,
             type: "customer",
+            
           });
           Notification({
             message: "profile created successfully",
