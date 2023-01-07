@@ -5,59 +5,102 @@
 
 .container {
   width: 60%;
-  margin: auto;
+  height: auto;
+  border: 1px solid grey;
+  box-shadow: 2px 2px 2px black;
+  margin: 0.5rem auto;
+  /* margin: auto; */
+}
+.cart_box {
+  width: clamp(6rem, 2.8vw, 15rem);
+}
+
+.cart_img {
+  width: 90%;
+  /* border: 4px solid green; */
+  justify-content: center;
+  align-items: center;
 }
 
 .cart_box img {
-  width: 100px;
-  height: 100px;
+  width: 5rem;
+  height: 5rem;
+  padding: 2px;
+  border: 1px solid grey;
+  border-radius: 100%;
+}
+.cart_img p {
+  /* border: 1px solid red; */
+  font-size: clamp(1rem, 1.5vw, 3rem);
+  width: 100%;
+  margin: auto;
+  font-weight: bold;
 }
 
 .cart_img {
   display: flex;
-  width: 100%;
+  width: clamp(3rem, 3.8vw, 15rem);
 }
-/* @media screen and (max-width: 764px) {
+@media screen and (max-width: 700px) {
   .cart_box img {
-    width: 100%;
-    height: 50px;
+    display: block;
+    /* justify-self: unset; */
+    justify-content: center;
+    align-items: center;
   }
 
   .cart_img {
     display: flex;
+    flex-direction: column;
     width: 100%;
+    margin: auto;
   }
 
   .cart_img p {
     font-weight: bold;
-    margin-left: 10px;
+    text-align: center;
+    margin: auto;
   }
-} */
+}
 
-.cart_box {
+/* .cart_box {
   display: flex;
+  flex-direction: column;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   margin-top: 20px;
   border: 2px solid skyblue;
   padding-bottom: 5px;
   margin-bottom: 10px;
-}
+} */
 
 .total {
   display: flex;
   justify-content: space-between;
 }
+.total-price {
+  width: "90%";
+  text-align: center;
+  align-items: center;
+  height: 4.6rem;
+  padding-top: 0.4rem;
+  margin: "  auto";
+  background-color: goldenrod;
+  border-radius: 1rem;
 
-.total span:nth-child(1) {
+  color: inherit;
+  font-size: clamp(2rem, 1.5vw, 3rem);
+}
+/* .total span:nth-child(1) {
   font-size: 2rem;
   color: skyblue;
   font-weight: bold;
   letter-spacing: 2px;
-}
+} */
 
-.total span:nth-child(2) {
+/* .total span:nth-child(2) {
   font-size: 2rem;
   color: green;
   font-weight: bold;
-}
+} */

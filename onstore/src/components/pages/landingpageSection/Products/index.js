@@ -21,7 +21,7 @@ import { Notification } from "../../../../utils/Notifications";
 import { useNavigate } from "react-router-dom";
 function Products() {
   const [state, dispatch] = React.useContext(DarkmodeContext);
-const navigateUser = useNavigate();
+  const navigateUser = useNavigate();
   const [store, setStore] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
   // const [tempData, setTempData] = useState([
@@ -59,15 +59,15 @@ const navigateUser = useNavigate();
     setStore(jsondata);
   };
 
-  // const fetchData = async () => {
-  //   const q = query(collection(db, "cartproducts"));
-  //   const querySnapshot = await getDocs(q);
-  //   let addedProducts = [];
-  //   querySnapshot.forEach((doc) => {
-  //     addedProducts.push(doc.data());
-  //   });
-  //   setCartProducts(addedProducts);
-  // };
+  const fetchData = async () => {
+    const q = query(collection(db, "cartproducts"));
+    const querySnapshot = await getDocs(q);
+    let addedProducts = [];
+    querySnapshot.forEach((doc) => {
+      addedProducts.push(doc.data());
+    });
+    setCartProducts(addedProducts);
+  };
 
   // console.log(store);
   console.log("added products in database", cartProducts);
@@ -153,13 +153,12 @@ const navigateUser = useNavigate();
           type: "success",
         });
       }
-    }
-    else{
+    } else {
       navigateUser("/auth");
       Notification({
         message: "User not found Please Login",
         type: "warning",
-      })
+      });
     }
     // console.log(
     //   "this product is added to cart",
