@@ -55,29 +55,46 @@ export default function UserAuth() {
           userEmail: user.email,
           userImage: user.photoURL,
         };
-
-        // // console.log( "test", userData.userName, userData.userEmail, userData.userImage);
-
         setCustomerData(userData);
         console.log("user data has been saved in local state", userData);
-        try {
-          await setDoc(doc(db, "userInfo", uid), {
-            ...userData,
-            type: "customer",
-            
-          });
-          Notification({
-            message: "profile created successfully",
-            type: "success",
-          });
-          navigateUser("/profile");
-          // console.log("data saved in firebase", userData);
-          console.log("I set the user data");
-        } catch (err) {
-          console.log(err);
-          Notification({ message: "something went wrong", type: "danger" });
-        }
 
+        // check if user is already present in firestore db
+        // then navigate to profile page.
+        if (user) {
+          let docRef = doc(db, "userInfo", uid);
+          getDoc(docRef).then((doc) => {
+            // console.log(doc);
+            if (doc.exists()) {
+              console.log("no need to set data user already exists i am redirecting him to profile page  "); 
+              navigateUser("/profile");
+
+            } else {
+              // doc.data() will be undefined in this case
+              console.log("No such document!");
+              Notification({ message: "No profile found ", type: "danger" });
+              navigateUser("/auth");
+            }
+          });
+        } else {
+          // // console.log( "test", userData.userName, userData.userEmail, userData.userImage);
+
+          try {
+            await setDoc(doc(db, "userInfo", uid), {
+              ...userData,
+              type: "customer",
+            });
+            Notification({
+              message: "profile created successfully",
+              type: "success",
+            });
+            navigateUser("/profile");
+            // console.log("data saved in firebase", userData);
+            console.log("I set the user data and navigated him to profile page", userData);  
+          } catch (err) {
+            console.log(err);
+            Notification({ message: "something went wrong", type: "danger" });
+          }
+        }
         console.log(result, "result ");
       })
       .catch((error) => {

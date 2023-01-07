@@ -18,10 +18,10 @@ import {
 import { db } from "../../../../firebaseConfig/index";
 import { v4 as uuid } from "uuid";
 import { Notification } from "../../../../utils/Notifications";
-
+import { useNavigate } from "react-router-dom";
 function Products() {
   const [state, dispatch] = React.useContext(DarkmodeContext);
-
+const navigateUser = useNavigate();
   const [store, setStore] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
   // const [tempData, setTempData] = useState([
@@ -40,7 +40,6 @@ function Products() {
   //     customer_email: "",
   //   },
   // ]);
-
 
   useEffect(() => {
     mystore();
@@ -75,94 +74,101 @@ function Products() {
 
   let addToCart = async (cartItem) => {
     let userInfo = JSON.parse(localStorage.getItem("user"));
-    let customer_id = userInfo.uid;
-    let product_id = uuid();
-    // let job_id = uuidv4();
-    console.log(userInfo);
-    console.log(cartItem, "added to cart");
+    if (userInfo) {
+      let customer_id = userInfo.uid;
+      let product_id = uuid();
+      // let job_id = uuidv4();
+      console.log(userInfo);
+      console.log(cartItem, "added to cart");
 
-    // let product_id = uuid();
+      // let product_id = uuid();
 
-    if (cartItem) {
-      try {
-        // fetch the customer info from the customer collection
-        const customer = await getDoc(doc(db, "userInfo", customer_id));
-        console.log(customer.data(), "ssss this is a customer info");
-        let customer_name = customer.data().userName;
-        let customer_email = customer.data().userEmail;
-        // let customer_name=customer.data().name;
-        let product_id = uuid();
-        // let product_details = [
-        //   {
-        //     product_id,
-        //     apiDefaultProduct_id: "",
-        //     customer_id: "",
+      if (cartItem) {
+        try {
+          // fetch the customer info from the customer collection
+          const customer = await getDoc(doc(db, "userInfo", customer_id));
+          console.log(customer.data(), "ssss this is a customer info");
+          let customer_name = customer.data().userName;
+          let customer_email = customer.data().userEmail;
+          // let customer_name=customer.data().name;
+          let product_id = uuid();
+          // let product_details = [
+          //   {
+          //     product_id,
+          //     apiDefaultProduct_id: "",
+          //     customer_id: "",
 
-        //     // status: "added",
-        //     // createdAt: new Date(),
-        //     product_title:""  ,
-        //     product_price:  "",
-        //     product_amount:""  ,
-        //     product_image:  "",
-        //     customer_name,
-        //     customer_email,
-        //   },
-        // ];
-        // setTempData((data) => [{
-        //   // ...data, 
-        //   product_id  ,
-        //   apiDefaultProduct_id: cartItem.id,
-        //   customer_id: customer_id,
-           
-        //   status: "added",
-        //   createdAt: new Date(),
-        //   product_title: cartItem.title,
-        //   product_price: cartItem.price,
-        //   product_amount: cartItem.amount,
-        //   product_image: cartItem.image,
-        //   customer_name,
-        //   customer_email,
-        // }])
-        // console.log("this is a temporary data store" ,tempData)
+          //     // status: "added",
+          //     // createdAt: new Date(),
+          //     product_title:""  ,
+          //     product_price:  "",
+          //     product_amount:""  ,
+          //     product_image:  "",
+          //     customer_name,
+          //     customer_email,
+          //   },
+          // ];
+          // setTempData((data) => [{
+          //   // ...data,
+          //   product_id  ,
+          //   apiDefaultProduct_id: cartItem.id,
+          //   customer_id: customer_id,
 
-        await setDoc(doc(db, "cartproducts", customer_id), {
-          //  ...tempData,
-          product_id  ,
-          apiDefaultProduct_id: cartItem.id,
-          customer_id: customer_id,
-           
-          status: "added",
-          createdAt: new Date(),
-          product_title: cartItem.title,
-          product_price: cartItem.price,
-          product_amount: cartItem.amount,
-          product_image: cartItem.image,
-          customer_name,
-          customer_email,
-            
-        });
-      } catch (err) {
-        console.log(err);
+          //   status: "added",
+          //   createdAt: new Date(),
+          //   product_title: cartItem.title,
+          //   product_price: cartItem.price,
+          //   product_amount: cartItem.amount,
+          //   product_image: cartItem.image,
+          //   customer_name,
+          //   customer_email,
+          // }])
+          // console.log("this is a temporary data store" ,tempData)
+
+          await setDoc(doc(db, "cartproducts", customer_id), {
+            //  ...tempData,
+            product_id,
+            apiDefaultProduct_id: cartItem.id,
+            customer_id: customer_id,
+
+            status: "added",
+            createdAt: new Date(),
+            product_title: cartItem.title,
+            product_price: cartItem.price,
+            product_amount: cartItem.amount,
+            product_image: cartItem.image,
+            customer_name,
+            customer_email,
+          });
+        } catch (err) {
+          console.log(err);
+          Notification({
+            message: "some thing went wrong",
+            type: "danger",
+          });
+        }
+
         Notification({
-          message: "some thing went wrong",
-          type: "danger",
+          message: "Added to Cart ",
+          type: "success",
         });
       }
-
-      Notification({
-        message: "Added to Cart ",
-        type: "success",
-      });
     }
-
-    console.log(
-      "this product is added to cart",
-      cartItem.name,
-      cartItem.title,
-      cartItem.price,
-      cartItem.amount,
-      cartItem.image
-    );
+    else{
+      navigateUser("/auth");
+      Notification({
+        message: "User not found Please Login",
+        type: "warning",
+      })
+    }
+    // console.log(
+    //   "this product is added to cart",
+    //   cartItem.name,
+    //   cartItem.title,
+    //   cartItem.price,
+    //   cartItem.amount,
+    //   cartItem.image
+    // );
   };
 
   return (
