@@ -5,27 +5,37 @@ import "./Cart.css";
 import shoppingBasket from "../../../assets/shoppingBasket.png";
 import { DarkmodeContext } from "../../../contex/darkmode/index";
 
-const Cart = ({ data, setCart, handleChange }) => {
+const Cart = ({ cartProducts, setCartProducts, handleChange }) => {
   const [price, setPrice] = useState(0);
   const [state, dispatch] = React.useContext(DarkmodeContext);
 
-  const cart = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // console.log(
+  //   cartProducts.product_amount,
+  //   cartProducts.product_price,
+  //   "this data is needed"
+  // );
 
   const handlePrice = () => {
     let ans = 0;
-    cart.map((item) => (ans += item.amount * item.price));
+    cartProducts.map((item) => (
+        ans += item.product_amount
+        * item.product_price
+
+    ))
     setPrice(ans);
-  };
+    console.log(ans ,"new price");
+    
+}
 
-  const handleRemove = (id) => {
-    const arr = cart.filter((item) => item.id !== id);
-    setCart(arr);
+const handleRemove = (id) => {
+    const arr = cartProducts.filter((item) => item.id !== id);
+    setCartProducts(arr);
     // handlePrice();
-  };
+}
 
-  useEffect(() => {
-    handlePrice();
-  });
+useEffect(() => {
+    // handlePrice();
+})
 
   return (
     <Grid
@@ -51,9 +61,9 @@ const Cart = ({ data, setCart, handleChange }) => {
       >
         <Grid rowSpacing={2} container className="cart_box">
           <Grid item xs={12} md={12} lg={5} columnGap={1} className="cart_img">
-            <img alt="" src={data.product_image} />
+            <img alt="" src={cartProducts.product_image} />
             <Grid item xs={12} md={5} lg={8} className="cart_para">
-              <p>{data.product_title}</p>
+              <p>{cartProducts.product_title}</p>
             </Grid>
           </Grid>
 
@@ -74,11 +84,16 @@ const Cart = ({ data, setCart, handleChange }) => {
                 marginRight: "10px",
                 backgroundColor: "inherit",
               }}
-              onClick={() => handleChange()}
+              onClick={() =>{
+                handleChange(cartProducts, +1)
+              console.log("this is cart products", cartProducts)
+              }}
             >
               +
             </Button>
-            <Typography fontWeight="bold">{data.product_amount}</Typography>
+            <Typography fontWeight="bold">
+              {cartProducts.product_amount}
+            </Typography>
             <Button
               sx={{
                 color: "inherit",
@@ -87,14 +102,17 @@ const Cart = ({ data, setCart, handleChange }) => {
                 backgroundColor: "inherit",
               }}
               variant="contained"
-              onClick={() => handleChange()}
+              onClick={() => 
+              handleChange(cartProducts, +1)
+               
+              }
             >
               {" "}
               -
             </Button>
           </Grid>
           <Grid item xs={12} md={2}>
-            <h1>{data.product_price}$</h1>
+            <h1>{cartProducts.product_price}$</h1>
             <Grid item xs={12}>
               <Button
                 sx={{
@@ -103,7 +121,7 @@ const Cart = ({ data, setCart, handleChange }) => {
                   backgroundColor: "red",
                 }}
                 variant="contained"
-                onClick={() => handleRemove()}
+                onClick={() => handleRemove(cartProducts.id)}
               >
                 Remove
               </Button>
@@ -125,7 +143,7 @@ const Cart = ({ data, setCart, handleChange }) => {
           }}
         >
           <Typography fontWeight="bold">Total</Typography>
-          <Typography fontWeight="bold">000000000</Typography>
+          <Typography fontWeight="bold">{price}</Typography>
         </div>
       </Grid>
     </Grid>

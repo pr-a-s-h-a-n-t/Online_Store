@@ -24,22 +24,25 @@ function Products() {
   const navigateUser = useNavigate();
   const [store, setStore] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
-  // const [tempData, setTempData] = useState([
-  //   {
-  //     product_id :"",
-  //     apiDefaultProduct_id: "",
-  //     customer_id: "",
+  const innitialValues = {
+    product_id :"",
+    apiDefaultProduct_id: "",
+    customer_id: "",
 
-  //     // status: "added",
-  //     // createdAt: new Date(),
-  //     product_title:""  ,
-  //     product_price:  "",
-  //     product_amount:""  ,
-  //     product_image:  "",
-  //     customer_name: "",
-  //     customer_email: "",
-  //   },
-  // ]);
+    // status: "added",
+    // createdAt: new Date(),
+    product_title:""  ,
+    product_price:  "",
+    product_amount:""  ,
+    product_image:  "",
+    customer_name: "",
+    customer_email: "",
+  }
+  const [tempData, setTempData] = useState( 
+    {
+      ...innitialValues,
+    }
+ );
 
   useEffect(() => {
     mystore();
@@ -125,21 +128,75 @@ function Products() {
           // }])
           // console.log("this is a temporary data store" ,tempData)
 
-          await setDoc(doc(db, "cartproducts", customer_id), {
-            //  ...tempData,
-            product_id,
-            apiDefaultProduct_id: cartItem.id,
-            customer_id: customer_id,
+          // await setDoc(doc(db, "cartproducts", customer_id), {
+          //   //  ...tempData,
+          //   product_id,
+          //   // apiDefaultProduct_id: cartItem.id,
+          //   id: cartItem.id,
 
+          //   customer_id: customer_id,
+
+          //   status: "added",
+          //   createdAt: new Date(),
+          //   product_title: cartItem.title,
+          //   product_price: cartItem.price,
+          //   product_amount: cartItem.amount,
+          //   product_image: cartItem.image,
+          //   customer_name,
+          //   customer_email,
+          // });
+
+          // testinfg
+
+          let cartProductInfo = {};
+          await getDoc(doc(db, "userInfo", customer_id))
+          .then((docSnap) => {
+            cartProductInfo = docSnap.data();
+          });
+  
+          await setDoc(doc(db, " cartproducts", product_id,), {
+            product_id,
+          //   // apiDefaultProduct_id: cartItem.id,
+            // id: cartItem.id,
+            // customer_id: customer_id,
+            // status: "added",
+            // createdAt: new Date(),
+            // product_title: cartItem.title,
+            // product_price: cartItem.price,
+            // product_amount:cartItem.amount,
+            // product_image: cartItem.image,
+            // customer_name,
+            // customer_email,
+            // ...tempData,
+            cartItem,
+            product_id,
             status: "added",
             createdAt: new Date(),
-            product_title: cartItem.title,
-            product_price: cartItem.price,
-            product_amount: cartItem.amount,
-            product_image: cartItem.image,
-            customer_name,
-            customer_email,
+
           });
+          Notification({ message: "Job Posted Successfully", type: "success" });
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          // testinfg
+
+
+
+
         } catch (err) {
           console.log(err);
           Notification({

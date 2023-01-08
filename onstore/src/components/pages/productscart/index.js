@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import loadingGif from "../../../assets/loading.gif";
-import ItemCard from "./ItemCard";
+// import ItemCard from "./ItemCard";
 import { Notification } from "../../../utils/Notifications";
 import Cart from "./Cart";
 import {
@@ -23,14 +23,14 @@ function CartPage() {
   // fetch data from database
   let userInfo = JSON.parse(localStorage.getItem("user"));
   // if (userInfo) {
-  let customer_id = userInfo.uid;
+  let product_id = userInfo.uid;
 
   const fetch = () => {
     // fetch all the docs in applications collection where employerId === current user id
 
     const q = query(
       collection(db, "cartproducts"),
-      where("customer_id", "==", customer_id)
+      where("product_id", "==", product_id)
     );
 
     //subscribe to the query
@@ -51,6 +51,27 @@ function CartPage() {
     fetch();
   }, []);
 
+
+  const handleChange = (item, d) => {
+    console.log(item, "changed sssssssssssssssssssssssssssssssssssss")
+    let ind = -1;
+    cartProducts.forEach((data, index) => {
+      if (data.id === item.id)
+        ind = index;
+    });
+    const tempArr = cartProducts;
+    tempArr[ind].amount += d;
+
+    if (tempArr[ind].amount === 0)
+      tempArr[ind].amount = 1;
+      setCartProducts([...tempArr])
+      console.log("temp assrrrrr",tempArr,
+      "new card products" ,cartProducts
+      )
+      
+            
+  }
+
   return (
     <div
       style={{
@@ -64,12 +85,13 @@ function CartPage() {
         <div>Your Cart Is Empty</div>
       ) : cartProducts && cartProducts.length > 0 ? (
         <div>
-          {cartProducts.map((data, i) => {
+          {cartProducts.map((cartProducts, i) => {
             return (
               <Cart
                 key={i}
-                // cartProducts={cartProducts}
-                data={data}
+                handleChange={handleChange}
+                // data={data}
+                cartProducts={cartProducts}
               />
             );
           })}
