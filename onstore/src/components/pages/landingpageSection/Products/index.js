@@ -24,26 +24,20 @@ function Products() {
   const navigateUser = useNavigate();
   const [store, setStore] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
-  const innitialValues = {
-    product_id :"",
-    apiDefaultProduct_id: "",
-    customer_id: "",
-
-    // status: "added",
-    // createdAt: new Date(),
-    product_title:""  ,
-    product_price:  "",
-    product_amount:""  ,
-    product_image:  "",
-    customer_name: "",
-    customer_email: "",
-  }
-  const [tempData, setTempData] = useState( 
+  const innitialValues = [
     {
-      ...innitialValues,
-    }
- );
-
+      amount: "",
+      category: " ",
+      description: " ",
+      id: " ",
+      image: " ",
+      price: " ",
+      rating: " ",
+      title: " ",
+    },
+  ];
+  const [tempData, setTempData] = useState([{}]);
+  console.log("this is a temp saaaa", tempData);
   useEffect(() => {
     mystore();
     // fetchData();
@@ -73,130 +67,39 @@ function Products() {
   };
 
   // console.log(store);
-  console.log("added products in database", cartProducts);
+  // console.log("added products in database", cartProducts);
 
   let addToCart = async (cartItem) => {
     let userInfo = JSON.parse(localStorage.getItem("user"));
     if (userInfo) {
       let customer_id = userInfo.uid;
       let product_id = uuid();
-      // let job_id = uuidv4();
-      console.log(userInfo);
-      console.log(cartItem, "added to cart");
-
-      // let product_id = uuid();
 
       if (cartItem) {
         try {
           // fetch the customer info from the customer collection
           const customer = await getDoc(doc(db, "userInfo", customer_id));
-          console.log(customer.data(), "ssss this is a customer info");
+          // console.log(customer.data(), "ssss this is a customer info");
           let customer_name = customer.data().userName;
           let customer_email = customer.data().userEmail;
           // let customer_name=customer.data().name;
           let product_id = uuid();
-          // let product_details = [
-          //   {
-          //     product_id,
-          //     apiDefaultProduct_id: "",
-          //     customer_id: "",
 
-          //     // status: "added",
-          //     // createdAt: new Date(),
-          //     product_title:""  ,
-          //     product_price:  "",
-          //     product_amount:""  ,
-          //     product_image:  "",
-          //     customer_name,
-          //     customer_email,
-          //   },
-          // ];
-          // setTempData((data) => [{
-          //   // ...data,
-          //   product_id  ,
-          //   apiDefaultProduct_id: cartItem.id,
-          //   customer_id: customer_id,
+          setTempData((data) => [...data, cartItem]);
 
-          //   status: "added",
-          //   createdAt: new Date(),
-          //   product_title: cartItem.title,
-          //   product_price: cartItem.price,
-          //   product_amount: cartItem.amount,
-          //   product_image: cartItem.image,
-          //   customer_name,
-          //   customer_email,
-          // }])
-          // console.log("this is a temporary data store" ,tempData)
-
-          // await setDoc(doc(db, "cartproducts", customer_id), {
-          //   //  ...tempData,
-          //   product_id,
-          //   // apiDefaultProduct_id: cartItem.id,
-          //   id: cartItem.id,
-
-          //   customer_id: customer_id,
-
-          //   status: "added",
-          //   createdAt: new Date(),
-          //   product_title: cartItem.title,
-          //   product_price: cartItem.price,
-          //   product_amount: cartItem.amount,
-          //   product_image: cartItem.image,
-          //   customer_name,
-          //   customer_email,
-          // });
-
-          // testinfg
-
-          let cartProductInfo = {};
-          await getDoc(doc(db, "userInfo", customer_id))
-          .then((docSnap) => {
-            cartProductInfo = docSnap.data();
-          });
-  
-          await setDoc(doc(db, " cartproducts", product_id,), {
+          await setDoc(doc(db, " cartproducts", customer_id), {
+            ...tempData,
+            customer_name,
             product_id,
-          //   // apiDefaultProduct_id: cartItem.id,
-            // id: cartItem.id,
-            // customer_id: customer_id,
-            // status: "added",
-            // createdAt: new Date(),
-            // product_title: cartItem.title,
-            // product_price: cartItem.price,
-            // product_amount:cartItem.amount,
-            // product_image: cartItem.image,
-            // customer_name,
-            // customer_email,
-            // ...tempData,
+            customer_id : customer_id,
+
             cartItem,
-            product_id,
             status: "added",
             createdAt: new Date(),
-
           });
-          Notification({ message: "Job Posted Successfully", type: "success" });
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          // Notification({ message: "Job Posted Successfully", type: "success" });
 
           // testinfg
-
-
-
-
         } catch (err) {
           console.log(err);
           Notification({

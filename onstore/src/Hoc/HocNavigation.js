@@ -77,13 +77,13 @@ let filterNav;
       return page.name !== "LogIn";
     });
 
-    console.log("this is filternav", filterNav);
+    // console.log("this is filternav", filterNav);
   } else {
     filterNav = pages.filter((page) => {
       return page.name !== "Profile";
     });
 
-    console.log("this is filternav", filterNav);
+    // console.log("this is filternav", filterNav);
   }
   // console.log("this is all nav",pages);
 
