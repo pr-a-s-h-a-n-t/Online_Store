@@ -17,6 +17,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { async } from "@firebase/util";
 export default function UserAuth() {
   const [customerData, setCustomerData] = useState({
     userName: "",
@@ -62,38 +63,43 @@ export default function UserAuth() {
         // then navigate to profile page.
         if (user) {
           let docRef = doc(db, "userInfo", uid);
-          getDoc(docRef).then((doc) => {
+          getDoc(docRef).then(async (doc_) => {
             // console.log(doc);
-            if (doc.exists()) {
-              console.log("no need to set data user already exists i am redirecting him to profile page  "); 
+            if (doc_.exists()) {
+              console.log(
+                "no need to set data user already exists i am redirecting him to profile page  "
+              );
               navigateUser("/profile");
-
             } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document!");
-              Notification({ message: "No profile found ", type: "danger" });
-              navigateUser("/auth");
+              try {
+                await setDoc(doc(db, "userInfo", uid), {
+                  ...userData,
+                  type: "customer",
+                });
+                Notification({
+                  message: "profile created successfully",
+                  type: "success",
+                });
+                navigateUser("/profile");
+                // console.log("data saved in firebase", userData);
+                console.log(
+                  "I set the user data and navigated him to profile page",
+                  userData
+                );
+              } catch (err) {
+                console.log(err);
+                Notification({
+                  message: "something went wrong",
+                  type: "danger",
+                });
+              }
             }
           });
         } else {
-          // // console.log( "test", userData.userName, userData.userEmail, userData.userImage);
-
-          try {
-            await setDoc(doc(db, "userInfo", uid), {
-              ...userData,
-              type: "customer",
-            });
-            Notification({
-              message: "profile created successfully",
-              type: "success",
-            });
-            navigateUser("/profile");
-            // console.log("data saved in firebase", userData);
-            console.log("I set the user data and navigated him to profile page", userData);  
-          } catch (err) {
-            console.log(err);
-            Notification({ message: "something went wrong", type: "danger" });
-          }
+          Notification({
+            message: "something went wrong",
+            type: "danger",
+          });
         }
         console.log(result, "result ");
       })

@@ -14,6 +14,7 @@ import {
   setDoc,
   doc,
   getDoc,
+  addDoc,
 } from "firebase/firestore";
 import { db } from "../../../../firebaseConfig/index";
 import { v4 as uuid } from "uuid";
@@ -24,20 +25,7 @@ function Products() {
   const navigateUser = useNavigate();
   const [store, setStore] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
-  const innitialValues = [
-    {
-      amount: "",
-      category: " ",
-      description: " ",
-      id: " ",
-      image: " ",
-      price: " ",
-      rating: " ",
-      title: " ",
-    },
-  ];
-  const [tempData, setTempData] = useState([{}]);
-  console.log("this is a temp saaaa", tempData);
+
   useEffect(() => {
     mystore();
     // fetchData();
@@ -57,7 +45,7 @@ function Products() {
   };
 
   const fetchData = async () => {
-    const q = query(collection(db, "cartproducts"));
+    const q = query(collection(db, "cart "));
     const querySnapshot = await getDocs(q);
     let addedProducts = [];
     querySnapshot.forEach((doc) => {
@@ -71,48 +59,58 @@ function Products() {
 
   let addToCart = async (cartItem) => {
     let userInfo = JSON.parse(localStorage.getItem("user"));
+    console.log(userInfo);
     if (userInfo) {
       let customer_id = userInfo.uid;
+      let customer_name = userInfo.displayName;
       let product_id = uuid();
 
-      if (cartItem) {
-        try {
-          // fetch the customer info from the customer collection
-          const customer = await getDoc(doc(db, "userInfo", customer_id));
-          // console.log(customer.data(), "ssss this is a customer info");
-          let customer_name = customer.data().userName;
-          let customer_email = customer.data().userEmail;
-          // let customer_name=customer.data().name;
-          let product_id = uuid();
+      let docRef = doc(db, "userInfo", customer_id);
+      await getDoc(docRef).then((doc) => {
+        // console.log(doc);
+        if (doc.exists()) {
+          if (cartItem) {
+            try {
+              // fetch the customer info from the customer collection
+              // const customer = await getDoc(doc(db, "userInfo", customer_id));
+              // console.log(customer.data(), "ssss this is a customer info");
+              // let customer_name = customer.data().userName;
+              // let customer_email = customer.data().userEmail;
+              // let customer_name=customer.data().name;
+              let product_id = uuid();
 
-          setTempData((data) => [...data, cartItem]);
+              addDoc(collection(db, " cartProducts "), {
+                product_id: cartItem.id,
+                productName: cartItem.title,
+                productPrice: cartItem.price,
+                productImage: cartItem.image,
+                productCategory: cartItem.category,
+                customer_id,
+                customer_name,
+                createdAt: new Date(),
+                status: "added",
+              });
+            } catch (err) {
+              console.log(err);
+              Notification({
+                message: "some thing went wrong",
+                type: "danger",
+              });
+            }
 
-          await setDoc(doc(db, " cartproducts", customer_id), {
-            ...tempData,
-            customer_name,
-            product_id,
-            customer_id : customer_id,
-
-            cartItem,
-            status: "added",
-            createdAt: new Date(),
-          });
-          // Notification({ message: "Job Posted Successfully", type: "success" });
-
-          // testinfg
-        } catch (err) {
-          console.log(err);
+            Notification({
+              message: "Added to Cart ",
+              type: "success",
+            });
+          }
+        } else {
+          navigateUser("/auth");
           Notification({
-            message: "some thing went wrong",
-            type: "danger",
+            message: "something is wrong Please Login",
+            type: "warning",
           });
         }
-
-        Notification({
-          message: "Added to Cart ",
-          type: "success",
-        });
-      }
+      });
     } else {
       navigateUser("/auth");
       Notification({
@@ -120,14 +118,6 @@ function Products() {
         type: "warning",
       });
     }
-    // console.log(
-    //   "this product is added to cart",
-    //   cartItem.name,
-    //   cartItem.title,
-    //   cartItem.price,
-    //   cartItem.amount,
-    //   cartItem.image
-    // );
   };
 
   return (

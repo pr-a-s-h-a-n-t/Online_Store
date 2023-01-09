@@ -28,122 +28,29 @@ function CartPage() {
   console.log(user_id);
   let customer_name = userInfo.name;
 
-  const fetch = async () => {
-    // fetch all the docs in applications collection where employerId === current user id
-
-    // const q = query(
-    //   collection(db, "cartproducts"),
-    //   where("customer_id", "==", user_id )
-    // );
-
-    //subscribe to the query
-    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //   let docs = [];
-    //   querySnapshot.forEach((doc) => {
-    //     console.log("this is doc data",doc.data());
-    //     docs.push(doc.data());
-    //   });
-    //   setCartProducts(docs);
-
-    // });
-    // import { collection, query, where, getDocs } from "firebase/firestore";
-
-    const q = query(
-      collection(db, "cartproducts"),
+  const fetchData = async () => {
+    const q = await query(
+      collection(db, "cartProducts "),
       where("customer_id", "==", user_id)
     );
-
     const querySnapshot = await getDocs(q);
+    // console.log(querySnapshot, "asdadasdasdas");
+    let tempProducts = [];
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      if(doc.data().exists()) {
-      console.log(doc.id, " => ", doc.data())}
-      else {
-        console.log("no data found in this collection")
-        
-      };
+      console.log(doc.id, " => ", doc.data());
+      tempProducts.push(doc.data());
     });
+    setCartProducts(tempProducts);
+    console.log(tempProducts);
   };
 
-  // const cartProducts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   useEffect(() => {
-    fetch();
+    fetchData();
   }, []);
 
-  // async function handleClick(action, data) {
-  //   if (action === "accept") {
-  //     //update the status of the application to "accepted"
-
-  //     // a update call to the application collection
-  //     setDoc(
-  //       doc(db, "applications", data.product_id),
-  //       {
-  //         status: "accepted",
-  //       },
-  //       { merge: true }
-  //     );
-  //     // Notification({
-  //     //   type: "success",
-  //     //   message: "Application Accepted",
-  //     // });
-  //     // initialize a conversation between the employer and the candidate
-
-  //     //1. initialize last message in the last_message collection
-  //     // hey (candidate name) we  have accepted your application for the job (job title)
-  //     //2. initialize the conversation in the conversations collection
-  //     // hey (candidate name) we  have accepted your application for the job (job title)
-
-  //     // let conversation_id = uuid();
-  //     // let last_message = `Hey ${data.candidate_name} we have accepted your application for the job ${data.jobTitle}`;
-  //     // let last_message_id = uuid();
-  //     // let conversation_doc_id = uuid();
-  //     // await setDoc(doc(db, "last_messages", last_message_id), {
-  //     //   last_message,
-  //     //   last_message_id,
-  //     //   createdAt: new Date(),
-  //     //   conversation_id: conversation_id,
-  //     //   employer_id: employerId,
-  //     //   candidate_id: data.candidate_id,
-  //     //   company_name: data.company_name,
-  //     //   candidate_name: data.candidate_name,
-  //     //   jobTitle: data.jobTitle,
-  //     // });
-
-  //     // await setDoc(doc(db, "conversations", conversation_doc_id), {
-  //     //   conversation_id,
-  //     //   message: last_message,
-  //     //   createdAt: new Date(),
-  //     //   by: "employer",
-  //     //   user_id: employerId,
-  //     //   conversation_doc_id,
-  //     // });
-  //   } else if (action === "reject") {
-  //     //delete the application from the collection
-  //     // console.log(data);
-  //     deleteDoc(doc(db, "applications", data.product_id));
-  //     Notification({
-  //       type: "danger",
-  //       message: "item removed successfully",
-  //     });
-  //   }
-  // }
-
   const handleChange = (item, d) => {
-    console.log(item, "changed sssssssssssssssssssssssssssssssssssss");
-    // let ind = -1;
-    // cartProducts.forEach((data, index) => {
-    //   if (data.id === item.id)
-    //     ind = index;
-    // });
-    // const tempArr = cartProducts;
-    // tempArr[ind].amount += d;
-
-    // if (tempArr[ind].amount === 0)
-    //   tempArr[ind].amount = 1;
-    //   setCartProducts([...tempArr])
-    //   console.log("temp assrrrrr",tempArr,
-    //   "new card products" ,cartProducts
-    //   )
+    console.log(item, "changedasdasdasd ");
   };
 
   return (

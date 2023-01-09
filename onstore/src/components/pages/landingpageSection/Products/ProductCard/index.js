@@ -21,7 +21,7 @@ function SolutionCard({ product, addToCart }) {
       <div
         style={{
           color: state.shades.secondary,
-          backgroundColor: state.shades.solutionCardBackground,
+          backgroundColor: state.shades.primary,
         }}
         className="solutionCard-container"
       >
@@ -52,11 +52,10 @@ function SolutionCard({ product, addToCart }) {
                     // marginRight: "8px",
                     width: "100%",
                   }}
-                  onClick={( ) =>{
-                    console.log("productsssss", product );
-                    addToCart(product)
-                    }
-                    }
+                  onClick={() => {
+                    console.log("productsssss", product);
+                    addToCart(product);
+                  }}
                 >
                   Add To Cart
                 </Button>
