@@ -107,7 +107,7 @@ function TestFile() {
     let pp = 2;
     const q = await query(
       collection(db, "cartproducts"),
-      where("product_id", "==", pp)
+      where("product_id", "==", "pp")
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -166,12 +166,14 @@ function TestFile() {
       countryCode: "CA",
     };
     // { merge:true }
-    setDoc(docRef,{
-      ...data,
-      status: "changed again",
-    },
-      { merge:true } 
-      )
+    setDoc(
+      docRef,
+      {
+        ...data,
+        status: "changed again",
+      },
+      { merge: true }
+    )
       .then((docRef) => {
         console.log("Entire Document has been updated successfully");
       })

@@ -5,7 +5,13 @@ import "./Cart.css";
 import shoppingBasket from "../../../assets/shoppingBasket.png";
 import { DarkmodeContext } from "../../../contex/darkmode/index";
 
-const Cart = ({ cartProducts, handleRemove,   price,setCartProducts, handleChange }) => {
+const Cart = ({
+  cartProducts,
+  handleRemove,
+  price,
+  setCartProducts,
+  handleChange,
+}) => {
   // const [price, setPrice] = useState(0);
   const [state, dispatch] = React.useContext(DarkmodeContext);
 
@@ -116,7 +122,7 @@ const Cart = ({ cartProducts, handleRemove,   price,setCartProducts, handleChang
                   backgroundColor: "red",
                 }}
                 variant="contained"
-                onClick={() => handleRemove(cartProducts )}
+                onClick={() => handleRemove(cartProducts)}
               >
                 Remove
               </Button>

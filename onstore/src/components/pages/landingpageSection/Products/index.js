@@ -77,10 +77,11 @@ function Products() {
               // let customer_name = customer.data().userName;
               // let customer_email = customer.data().userEmail;
               // let customer_name=customer.data().name;
-              let product_id = uuid();
+              let product = uuid();
 
-              addDoc(collection(db, "cartProducts"), {
+              addDoc(collection(db, "cartproducts"), {
                 product_id: cartItem.id,
+
                 product_amount: cartItem.amount,
                 productName: cartItem.title,
                 productPrice: cartItem.price,

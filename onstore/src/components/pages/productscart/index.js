@@ -8,14 +8,17 @@ import {
   where,
   collection,
   getDocs,
+  getDoc,
   onSnapshot,
   setDoc,
   doc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig/index";
 import { v4 as uuid } from "uuid";
 import { DarkmodeContext } from "../../../contex/darkmode/index";
+import { reload } from "firebase/auth";
 
 function CartPage() {
   const [state, dispatch] = React.useContext(DarkmodeContext);
@@ -31,7 +34,7 @@ function CartPage() {
 
   const fetchData = async () => {
     const q = await query(
-      collection(db, "cartProducts"),
+      collection(db, "cartproducts"),
       where("customer_id", "==", customer_id)
     );
     try {
@@ -60,8 +63,8 @@ function CartPage() {
     let ind = -1;
     cartProducts.forEach((data, index) => {
       if (data.product_id === cartItem.product_id) {
-        ind = index
-      };
+        ind = index;
+      }
     });
     const tempArr = cartProducts;
     tempArr[ind].product_amount += d;
@@ -82,45 +85,31 @@ function CartPage() {
       createdAt: new Date(),
       status: "added",
     };
-    try {
-      await setDoc(
-        doc(db, "cartProducts",cartItem.product_id),
-        {
-          ...tempArr
-
-        },
-        { merge: true },
-        Notification({
-          message: "profile created successfully",
-          type: "success",
-        })
-      );
-    } catch (err) {
-      Notification({ message: "something went wrong" });
-    }
 
     // ///////////////////////////////////////////
-    // setCartProducts([...tempArr]);
+    setCartProducts([...tempArr]);
   };
 
   const handleRemove = async (id) => {
-    console.log(id);
-    // delete cart
-    // const q = await query(
-    //   collection(db, "cartProducts"),
-    //   where("product_id", "==",id)
-    // )
-    // const querySnapshot = await getDocs(q);
-    // deleteDoc(doc(db, "cartProducts",id.customer_id));
-    // querySnapshot.deleteDoc(doc.ref);
+    console.log("handle remove", id);
+    let temp_id = id.product_id;
+    // delete cartproduct.
 
-    // doc.data() is never undefined for query doc snapshots
-    // console.log(doc.id, " => ", doc.data());
-
-    const arr = cartProducts.filter(
-      (item) => item.product_id !== id.product_id
+    const q = await query(
+      collection(db, "cartproducts"),
+      where("product_id", "==", temp_id)
     );
-    setCartProducts(arr);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      deleteDoc(doc.ref);
+    });
+
+    // const arr = cartProducts.filter(
+    //   (item) => item.product_id !== id.product_id
+    // );
+    // setCartProducts(arr);
   };
 
   const handlePrice = () => {
