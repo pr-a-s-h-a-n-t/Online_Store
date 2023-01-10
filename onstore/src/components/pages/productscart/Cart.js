@@ -5,8 +5,8 @@ import "./Cart.css";
 import shoppingBasket from "../../../assets/shoppingBasket.png";
 import { DarkmodeContext } from "../../../contex/darkmode/index";
 
-const Cart = ({ cartProducts, setCartProducts, handleChange }) => {
-  const [price, setPrice] = useState(0);
+const Cart = ({ cartProducts, handleRemove,   price,setCartProducts, handleChange }) => {
+  // const [price, setPrice] = useState(0);
   const [state, dispatch] = React.useContext(DarkmodeContext);
 
   // console.log(
@@ -15,27 +15,24 @@ const Cart = ({ cartProducts, setCartProducts, handleChange }) => {
   //   "this data is needed"
   // );
 
-  const handlePrice = () => {
-    let ans = 0;
-    cartProducts.map((item) => (
-        ans += item.product_amount
-        * item.product_price
+  // const handlePrice = async() => {
+  //   let ans = 0;
+  //   cartProducts.map(
+  //     (cartProducts) =>
+  //       (ans += cartProducts.product_amount * cartProducts.productPrice)
+  //   );
+  //   setPrice(ans);
+  // };
 
-    ))
-    setPrice(ans);
-    console.log(ans ,"new price");
-    
-}
+  // const handleRemove = (id) => {
+  //   // console.log(id);
+  //   const arr = cartProducts.filter((item) => item.product_id !== id);
+  //   setCartProducts(arr);
+  // };
 
-const handleRemove = (id) => {
-    const arr = cartProducts.filter((item) => item.id !== id);
-    setCartProducts(arr);
-    // handlePrice();
-}
-
-useEffect(() => {
-    // handlePrice();
-})
+  // useEffect(() => {
+  //   async handlePrice();
+  // });
 
   return (
     <Grid
@@ -61,13 +58,14 @@ useEffect(() => {
       >
         <Grid rowSpacing={2} container className="cart_box">
           <Grid item xs={12} md={12} lg={5} columnGap={1} className="cart_img">
-            <img alt="" src={cartProducts.product_image} />
+            <img alt="" src={cartProducts.productImage} />
             <Grid item xs={12} md={5} lg={8} className="cart_para">
-              <p>{cartProducts.product_title}</p>
+              <p>{cartProducts.productName}</p>
             </Grid>
           </Grid>
 
           <Grid
+            // item
             item
             xs={12}
             md={6}
@@ -84,9 +82,9 @@ useEffect(() => {
                 marginRight: "10px",
                 backgroundColor: "inherit",
               }}
-              onClick={() =>{
-                handleChange(cartProducts, +1)
-              console.log("this is cart products", cartProducts)
+              onClick={() => {
+                handleChange(cartProducts, +1);
+                console.log("this is cart products", cartProducts);
               }}
             >
               +
@@ -102,17 +100,14 @@ useEffect(() => {
                 backgroundColor: "inherit",
               }}
               variant="contained"
-              onClick={() => 
-              handleChange(cartProducts, +1)
-               
-              }
+              onClick={() => handleChange(cartProducts, -1)}
             >
               {" "}
               -
             </Button>
           </Grid>
           <Grid item xs={12} md={2}>
-            <h1>{cartProducts.product_price}$</h1>
+            <h1>{cartProducts.productPrice}$</h1>
             <Grid item xs={12}>
               <Button
                 sx={{
@@ -121,7 +116,7 @@ useEffect(() => {
                   backgroundColor: "red",
                 }}
                 variant="contained"
-                onClick={() => handleRemove(cartProducts.id)}
+                onClick={() => handleRemove(cartProducts )}
               >
                 Remove
               </Button>
@@ -143,7 +138,7 @@ useEffect(() => {
           }}
         >
           <Typography fontWeight="bold">Total</Typography>
-          <Typography fontWeight="bold">{price}</Typography>
+          <Typography fontWeight="bold">{price}$</Typography>
         </div>
       </Grid>
     </Grid>

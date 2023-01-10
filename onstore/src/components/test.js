@@ -5,9 +5,13 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
+  deleteField,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig/index";
 import React from "react";
+import "firebase/compat/firestore";
 
 function TestFile() {
   const citiesRef = collection(db, "cities");
@@ -81,8 +85,8 @@ function TestFile() {
     let name = "Beijing";
     console.log("Customer_name: " + customer_name, "customer_id", customer_id);
     const q = await query(
-      collection(db, "cartProducts"),
-      where("customer_id", "==", customer_id)
+      collection(db, "cities"),
+      where("capital", "==", true)
     );
 
     try {
@@ -97,6 +101,83 @@ function TestFile() {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  let deleteData = async () => {
+    let pp = 2;
+    const q = await query(
+      collection(db, "cartproducts"),
+      where("product_id", "==", pp)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      deleteDoc(doc.ref);
+    });
+  };
+
+  let updateData = async () => {
+    let pp = 2;
+    // const q = await query(
+    //   collection(db, "cartproducts"),
+    //   where("product_id", "==", pp)
+    //   )
+    //   const cityRef = q;
+
+    //   // await updateDoc(q, {
+    //   //   status: "changed"
+    //   //  })
+    //   //  console.log("doc has been updated")
+
+    // // Remove the 'capital' field from the document
+    // await updateDoc(cityRef, {
+    //   status: deleteField()
+    // });
+    let temp = {
+      name: " ",
+      state: "",
+      country: "",
+      updated: "",
+    };
+    // const q = await query(
+    //   collection(db, "cartproducts"),
+    //   where("product_id", "==", pp)
+    //   )
+    const citiesRef = collection(db, "cities");
+
+    // Create a query against the collection.
+    const q = query(citiesRef, where("state", "==", "CA"));
+    // q.function(snapshot) {
+    //   snapshot.ref.update({ state: "New trainer" })
+    // });
+    // await setDoc(doc(db, "cities", "LA"), {
+    //   ...temp,
+    //   // name: "apple",
+    //   // state: "CA",
+    //   // country: "india",
+    //   updated: "2019",
+    // });
+    const docRef = doc(db, "cities", "LA");
+
+    const data = {
+      title: " newest",
+      provinceName: "British Columbia",
+      countryCode: "CA",
+    };
+    // { merge:true }
+    setDoc(docRef,{
+      ...data,
+      status: "changed again",
+    },
+      { merge:true } 
+      )
+      .then((docRef) => {
+        console.log("Entire Document has been updated successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -114,7 +195,7 @@ function TestFile() {
         style={{
           width: "40%",
           height: "10%",
-          backgroundColor: "black",
+          backgroundColor: "blue",
         }}
         onClick={dataUpload}
       >
@@ -130,6 +211,28 @@ function TestFile() {
         onClick={getData}
       >
         Get Data
+      </button>
+      <button
+        style={{
+          width: "40%",
+          height: "10%",
+          marginTop: "10%",
+          backgroundColor: "red",
+        }}
+        onClick={deleteData}
+      >
+        Delete Data
+      </button>
+      <button
+        style={{
+          width: "40%",
+          height: "10%",
+          marginTop: "10%",
+          backgroundColor: "yellow",
+        }}
+        onClick={updateData}
+      >
+        Updata Data
       </button>
     </div>
   );

@@ -81,6 +81,7 @@ function Products() {
 
               addDoc(collection(db, "cartProducts"), {
                 product_id: cartItem.id,
+                product_amount: cartItem.amount,
                 productName: cartItem.title,
                 productPrice: cartItem.price,
                 productImage: cartItem.image,
