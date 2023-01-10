@@ -23,26 +23,30 @@ function CartPage() {
 
   // fetch data from database
   let userInfo = JSON.parse(localStorage.getItem("user"));
-  // if (userInfo) {
+  let customer_id = userInfo.uid;
+  let customer_name = userInfo.displayName;
   let user_id = userInfo.uid;
   console.log(user_id);
-  let customer_name = userInfo.name;
 
   const fetchData = async () => {
     const q = await query(
-      collection(db, "cartProducts "),
-      where("customer_id", "==", user_id)
+      collection(db, "cartProducts"),
+      where("customer_id", "==", customer_id)
     );
-    const querySnapshot = await getDocs(q);
-    // console.log(querySnapshot, "asdadasdasdas");
-    let tempProducts = [];
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      tempProducts.push(doc.data());
-    });
-    setCartProducts(tempProducts);
-    console.log(tempProducts);
+    try {
+      const querySnapshot = await getDocs(q);
+      let tempProducts = [];
+
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        tempProducts.push(doc.data());
+      });
+      setCartProducts(tempProducts);
+      console.log(tempProducts);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {

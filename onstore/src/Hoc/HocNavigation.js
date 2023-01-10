@@ -40,6 +40,10 @@ const pages = [
     name: "LogIn",
     path: "/auth",
   },
+  {
+    name: "TestPage",
+    path: "/pp",
+  },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 

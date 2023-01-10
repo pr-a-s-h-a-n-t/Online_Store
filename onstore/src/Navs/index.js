@@ -14,7 +14,7 @@ import AboutPage from "../components/pages/aboutpage";
 import Account from "../components/pages/Account";
 import Profile from "../components/pages/Account";
 import UserAuth from "../components/pages/authPage/index";
-
+import TestFile from "../components/test";
 
 
 function Navs() {
@@ -68,9 +68,17 @@ function Navs() {
               </HocNavigation>
             }
           />
+          <Route
+            path="/pp "
+            element={
+              <HocNavigation>
+                <TestFile />
+              </HocNavigation>
+            }
+          />
           <Route path="/cartpage" element={<CartPage />} />
           <Route path="/aboutPage" element={<AboutPage />} />
-          
+          {/* <Route path="/testfile " element={<TestFile />} /> */}
 
           {/* <CartPage /> */}
         </Routes>

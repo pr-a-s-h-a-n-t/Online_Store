@@ -6,6 +6,7 @@ import Navs from "./Navs";
 import { DarkmodeContextProvider } from "./contex/darkmode/index";
 import "react-notifications-component/dist/theme.css";
 import { ReactNotifications } from "react-notifications-component";
+import TestFile from "./components/test";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <DarkmodeContextProvider>
         <ReactNotifications />
         <Navs />
+        <TestFile />
       </DarkmodeContextProvider>
     </div>
   );
