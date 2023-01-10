@@ -22,6 +22,7 @@ function TestFile() {
         capital: false,
         population: 860000,
         regions: ["west_coast", "norcal"],
+        createdAt: new Date(),
       });
       await setDoc(doc(citiesRef, "LA"), {
         name: "Los Angeles",
@@ -30,6 +31,7 @@ function TestFile() {
         capital: false,
         population: 3900000,
         regions: ["west_coast", "socal"],
+        createdAt: new Date(),
       });
       await setDoc(doc(citiesRef, "DC"), {
         name: "Washington, D.C.",
@@ -38,6 +40,7 @@ function TestFile() {
         capital: true,
         population: 680000,
         regions: ["east_coast"],
+        createdAt: new Date(),
       });
       await setDoc(doc(citiesRef, "TOK"), {
         name: "Tokyo",
@@ -46,6 +49,7 @@ function TestFile() {
         capital: true,
         population: 9000000,
         regions: ["kanto", "honshu"],
+        createdAt: new Date(),
       });
       await setDoc(doc(citiesRef, "BJ"), {
         name: "Beijing",
@@ -54,6 +58,7 @@ function TestFile() {
         capital: true,
         population: 21500000,
         regions: ["jingjinji", "hebei"],
+        createdAt: new Date(),
       });
 
       console.log("success data has been uploaded");
