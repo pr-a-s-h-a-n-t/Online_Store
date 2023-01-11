@@ -38,17 +38,16 @@ function CartPage() {
       where("customer_id", "==", customer_id)
     );
     try {
-      const querySnapshot = await getDocs(q);
-      let tempProducts = [];
-
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-        tempProducts.push(doc.data());
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let myProducts = [];
+        querySnapshot.forEach((doc) => {
+          myProducts.push({ ...doc.data(), id: doc.id });
+        });
+        setCartProducts(myProducts);
       });
-      setCartProducts(tempProducts);
+      console.log("cart products", cartProducts);
+
       await handlePrice();
-      // console.log(tempProducts);
     } catch (e) {
       console.log(e);
     }
@@ -90,6 +89,7 @@ function CartPage() {
     setCartProducts([...tempArr]);
   };
 
+  // Remove product from cart!!!
   const handleRemove = async (id) => {
     console.log("handle remove", id);
     let temp_id = id.product_id;
