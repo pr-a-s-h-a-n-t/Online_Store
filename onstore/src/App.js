@@ -14,7 +14,6 @@ function App() {
       <DarkmodeContextProvider>
         <ReactNotifications />
         <Navs />
-        <TestFile />
       </DarkmodeContextProvider>
     </div>
   );

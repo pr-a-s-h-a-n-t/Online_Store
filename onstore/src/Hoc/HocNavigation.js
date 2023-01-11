@@ -23,26 +23,18 @@ const pages = [
     name: "Home",
     path: "/",
   },
-  {
-    name: "About",
-    path: "/about",
-  },
 
   {
     name: "Profile",
     path: "/profile",
   },
   {
-    name: <LocalMallIcon />,
+    name: "Cart",
     path: "/cart",
   },
   {
     name: "LogIn",
     path: "/auth",
-  },
-  {
-    name: "TestPage",
-    path: "/pp",
   },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -74,9 +66,9 @@ function HocNavigation({ children }) {
   };
 
   let user = JSON.parse(localStorage.getItem("user"));
-let filterNav;
- 
- if (user) {
+  let filterNav;
+
+  if (user) {
     filterNav = pages.filter((page) => {
       return page.name !== "LogIn";
     });
@@ -226,38 +218,37 @@ let filterNav;
               }}
             >
               {/* {pages.map((page) => ( */}
-              {
-                filterNav && filterNav.length > 0 
-                ? filterNav.map((page) =>(
-                  <Button
-                  key={page.name}
-                  onClick={() => handleNavigate(page.path)}
-                  sx={{
-                    my: 2,
+              {filterNav && filterNav.length > 0
+                ? filterNav.map((page) => (
+                    <Button
+                      key={page.name}
+                      onClick={() => handleNavigate(page.path)}
+                      sx={{
+                        my: 2,
 
-                    display: "block",
-                    padding: "0 2rem",
-                    // color: state.shades.secondary,
-                  }}
-                >
-                  {page.name}
-                </Button>
-                )) : 
-                pages.map((page) => (
-                <Button
-                  key={page.name}
-                  onClick={() => handleNavigate(page.path)}
-                  sx={{
-                    my: 2,
+                        display: "block",
+                        padding: "0 2rem",
+                        // color: state.shades.secondary,
+                      }}
+                    >
+                      {page.name}
+                    </Button>
+                  ))
+                : pages.map((page) => (
+                    <Button
+                      key={page.name}
+                      onClick={() => handleNavigate(page.path)}
+                      sx={{
+                        my: 2,
 
-                    display: "block",
-                    padding: "0 2rem",
-                    // color: state.shades.secondary,
-                  }}
-                >
-                  {page.name}
-                </Button>
-              ))}
+                        display: "block",
+                        padding: "0 2rem",
+                        // color: state.shades.secondary,
+                      }}
+                    >
+                      {page.name}
+                    </Button>
+                  ))}
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>

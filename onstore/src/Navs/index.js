@@ -68,14 +68,7 @@ function Navs() {
               </HocNavigation>
             }
           />
-          <Route
-            path="/pp "
-            element={
-              <HocNavigation>
-                <TestFile />
-              </HocNavigation>
-            }
-          />
+           
           <Route path="/cartpage" element={<CartPage />} />
           <Route path="/aboutPage" element={<AboutPage />} />
           {/* <Route path="/testfile " element={<TestFile />} /> */}

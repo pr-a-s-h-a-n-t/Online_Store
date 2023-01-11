@@ -3,6 +3,9 @@ import loadingGif from "../../../assets/loading.gif";
 // import ItemCard from "./ItemCard";
 import { Notification } from "../../../utils/Notifications";
 import Cart from "./Cart";
+import { Button, Grid, Typography } from "@mui/material";
+import "./Cart.css";
+
 import {
   query,
   where,
@@ -45,7 +48,7 @@ function CartPage() {
         });
         setCartProducts(myProducts);
       });
-      console.log("cart products", cartProducts);
+      // console.log("cart products", cartProducts);
 
       await handlePrice();
     } catch (e) {
@@ -54,39 +57,40 @@ function CartPage() {
   };
 
   useEffect(() => {
-    fetchData(handlePrice);
+    fetchData();
+    handlePrice();
   }, []);
 
+  // updating the quantity of cart products.
   const handleChange = async (cartItem, d) => {
-    // console.log("check data",cartItem, d);
-    let ind = -1;
-    cartProducts.forEach((data, index) => {
-      if (data.product_id === cartItem.product_id) {
-        ind = index;
+    console.log(
+      "i am receiving handlechange req for this product",
+      cartItem,
+      d
+    );
+
+    let amount = Number(cartItem.product_amount);
+    if (amount >= 1) {
+      if (d === 1) {
+        amount++;
       }
-    });
-    const tempArr = cartProducts;
-    tempArr[ind].product_amount += d;
+      if (d === -1) {
+        amount = amount - 1;
+      }
 
-    if (tempArr[ind].amount === 0) {
-      tempArr[ind].amount = 1;
+      let collection_id = cartItem.id;
+      const productRef = await doc(db, "cartproducts", collection_id);
+      await updateDoc(productRef, {
+        product_amount: Number(amount),
+      });
     }
-    // /////////////////////////////////////////////////////////
-    let temp = {
-      product_id: cartItem.id,
-      product_amount: cartItem.amount,
-      productName: cartItem.title,
-      productPrice: cartItem.price,
-      productImage: cartItem.image,
-      productCategory: cartItem.category,
-      customer_id,
-      customer_name,
-      createdAt: new Date(),
-      status: "added",
-    };
-
-    // ///////////////////////////////////////////
-    setCartProducts([...tempArr]);
+    if (amount === 0) {
+      let collection_id = cartItem.id;
+      const productRef = await doc(db, "cartproducts", collection_id);
+      await updateDoc(productRef, {
+        product_amount: 1,
+      });
+    }
   };
 
   // Remove product from cart!!!
@@ -118,7 +122,7 @@ function CartPage() {
       (cartProducts) =>
         (ans += cartProducts.product_amount * cartProducts.productPrice)
     );
-    setPrice(ans);
+    setPrice(Math.round(ans));
     console.log("this is total data", price);
   };
 
@@ -131,28 +135,48 @@ function CartPage() {
         // candidateapplication
       }}
     >
-      {cartProducts && cartProducts.length === 0 ? (
-        <div>Your Cart Is Empty</div>
-      ) : cartProducts && cartProducts.length > 0 ? (
-        <div>
-          {cartProducts.map((cartProducts, i) => {
-            return (
-              <Cart
-                key={i}
-                handleChange={handleChange}
-                handleRemove={handleRemove}
-                handlePrice={handlePrice}
-                price={price}
-                cartProducts={cartProducts}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div>
-          <img src={loadingGif} alt="Loading Cart Items" />
-        </div>
-      )}
+      <Grid container>
+        <Grid item xs={8} md={4} lg={12} margin="auto">
+          {cartProducts && cartProducts.length === 0 ? (
+            <div>Your Cart Is Empty</div>
+          ) : cartProducts && cartProducts.length > 0 ? (
+            <div>
+              {cartProducts.map((cartProducts, i) => {
+                return (
+                  <Cart
+                    key={i}
+                    handleChange={handleChange}
+                    handleRemove={handleRemove}
+                    handlePrice={handlePrice}
+                    price={price}
+                    cartProducts={cartProducts}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div>
+              <img src={loadingGif} alt="Loading Cart Items" />
+            </div>
+          )}
+        </Grid>
+        <Grid item xs={8} md={4} lg={4} margin=" 2rem auto">
+          {" "}
+          <div
+            className="total-price"
+            style={{
+              color: state.shades.secondary,
+              // backgroundColor: state.shades.candidateapplicationrowcard,
+              // candidateapplicationrowcard
+              // candidateapplication
+              marginTop: "5px",
+            }}
+          >
+            <Typography fontWeight="bold">Total</Typography>
+            <Typography fontWeight="bold">{price}$</Typography>
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }

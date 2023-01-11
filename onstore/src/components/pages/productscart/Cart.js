@@ -11,34 +11,15 @@ const Cart = ({
   price,
   setCartProducts,
   handleChange,
+  handlePrice,
 }) => {
   // const [price, setPrice] = useState(0);
   const [state, dispatch] = React.useContext(DarkmodeContext);
 
-  // console.log(
-  //   cartProducts.product_amount,
-  //   cartProducts.product_price,
-  //   "this data is needed"
-  // );
-
-  // const handlePrice = async() => {
-  //   let ans = 0;
-  //   cartProducts.map(
-  //     (cartProducts) =>
-  //       (ans += cartProducts.product_amount * cartProducts.productPrice)
-  //   );
-  //   setPrice(ans);
-  // };
-
-  // const handleRemove = (id) => {
-  //   // console.log(id);
-  //   const arr = cartProducts.filter((item) => item.product_id !== id);
-  //   setCartProducts(arr);
-  // };
-
-  // useEffect(() => {
-  //   async handlePrice();
-  // });
+  useEffect(() => {
+    handlePrice();
+  })
+  
 
   return (
     <Grid
@@ -131,7 +112,7 @@ const Cart = ({
         </Grid>
         {/* ))} */}
       </div>
-      <Grid item xs={8} md={4} lg={4} margin="auto">
+      {/* <Grid item xs={8} md={4} lg={4} margin="auto">
         {" "}
         <div
           className="total-price"
@@ -146,7 +127,7 @@ const Cart = ({
           <Typography fontWeight="bold">Total</Typography>
           <Typography fontWeight="bold">{price}$</Typography>
         </div>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

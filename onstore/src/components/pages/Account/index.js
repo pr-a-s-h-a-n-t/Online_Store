@@ -247,7 +247,7 @@ function Profile() {
                             // marginBottom: "1rem",
                             borderStyle: "none",
                             border: "1px solid white",
-                            width: "80%",
+                            // width: "80%",
                             margin: "auto",
                           },
                         }}

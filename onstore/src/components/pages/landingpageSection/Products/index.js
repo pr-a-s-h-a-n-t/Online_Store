@@ -20,6 +20,7 @@ import { db } from "../../../../firebaseConfig/index";
 import { v4 as uuid } from "uuid";
 import { Notification } from "../../../../utils/Notifications";
 import { useNavigate } from "react-router-dom";
+import { async } from "@firebase/util";
 function Products() {
   const [state, dispatch] = React.useContext(DarkmodeContext);
   const navigateUser = useNavigate();
@@ -66,32 +67,54 @@ function Products() {
       let product_id = uuid();
 
       let docRef = doc(db, "userInfo", customer_id);
-      await getDoc(docRef).then((doc) => {
+      await getDoc(docRef).then(async (doc) => {
         // console.log(doc);
         if (doc.exists()) {
           if (cartItem) {
             try {
-              // fetch the customer info from the customer collection
-              // const customer = await getDoc(doc(db, "userInfo", customer_id));
-              // console.log(customer.data(), "ssss this is a customer info");
-              // let customer_name = customer.data().userName;
-              // let customer_email = customer.data().userEmail;
-              // let customer_name=customer.data().name;
               let product = uuid();
 
-              addDoc(collection(db, "cartproducts"), {
-                product_id: cartItem.id,
+              // const q =  query(
+              //   collection(db, "cartproducts"),
+              //   where("product_id", "==", cartItem.id)
+              // );
 
-                product_amount: cartItem.amount,
-                productName: cartItem.title,
-                productPrice: cartItem.price,
-                productImage: cartItem.image,
-                productCategory: cartItem.category,
-                customer_id,
-                customer_name,
-                createdAt: new Date(),
-                status: "added",
+              const q = query(
+                collection(db, "cartproducts"),
+                where("product_id", "==", cartItem.id)
+              );
+              let productsCheck;
+              const querySnapshot = await getDocs(q);
+              querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " sssss=> ", doc.data());
+                productsCheck = doc.data();
               });
+
+              if (productsCheck) {
+                Notification({
+                  message: "Already Added to Cart ",
+                  type: "danger",
+                });
+              } else {
+                addDoc(collection(db, "cartproducts"), {
+                  product_id: cartItem.id,
+
+                  product_amount: cartItem.amount,
+                  productName: cartItem.title,
+                  productPrice: cartItem.price,
+                  productImage: cartItem.image,
+                  productCategory: cartItem.category,
+                  customer_id,
+                  customer_name,
+                  createdAt: new Date(),
+                  status: "added",
+                });
+                Notification({
+                  message: "Added to Cart ",
+                  type: "success",
+                });
+              }
             } catch (err) {
               console.log(err);
               Notification({
@@ -100,10 +123,10 @@ function Products() {
               });
             }
 
-            Notification({
-              message: "Added to Cart ",
-              type: "success",
-            });
+            // Notification({
+            //   message: "Added to Cart ",
+            //   type: "success",
+            // });
           }
         } else {
           navigateUser("/auth");
@@ -124,7 +147,15 @@ function Products() {
 
   return (
     <>
-      <h1>Our Products</h1>
+      <h1
+      style={{
+        // border: "1px solid red",
+        marginTop: "2rem",
+       fontSize:" clamp(30px, 10vw, 6rem)",
+
+        
+      }}
+      >All Products</h1>
 
       {store && store.length === 0 ? (
         state.mode === "dark" ? (
