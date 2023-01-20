@@ -73,12 +73,7 @@ function Products() {
           if (cartItem) {
             try {
               let product = uuid();
-
-              // const q =  query(
-              //   collection(db, "cartproducts"),
-              //   where("product_id", "==", cartItem.id)
-              // );
-
+ 
               const q = query(
                 collection(db, "cartproducts"),
                 where("product_id", "==", cartItem.id)
@@ -97,9 +92,8 @@ function Products() {
                   type: "danger",
                 });
               } else {
-                addDoc(collection(db, "cartproducts"), {
+                let products={
                   product_id: cartItem.id,
-
                   product_amount: cartItem.amount,
                   productName: cartItem.title,
                   productPrice: cartItem.price,
@@ -109,7 +103,25 @@ function Products() {
                   customer_name,
                   createdAt: new Date(),
                   status: "added",
+                }
+                setCartProducts([...cartProducts, products])
+                console.log(cartProducts, "Added to local state so that i can add in localstorage")
+                localStorage.setItem("cartProducts", JSON.stringify(cartProducts))
+                addDoc(collection(db, "cartproducts"), {
+                  // product_id: cartItem.id,
+                  // product_amount: cartItem.amount,
+                  // productName: cartItem.title,
+                  // productPrice: cartItem.price,
+                  // productImage: cartItem.image,
+                  // productCategory: cartItem.category,
+                  // customer_id,
+                  // customer_name,
+                  // createdAt: new Date(),
+                  // status: "added",
+                   ...products,
                 });
+             
+                
                 Notification({
                   message: "Added to Cart ",
                   type: "success",

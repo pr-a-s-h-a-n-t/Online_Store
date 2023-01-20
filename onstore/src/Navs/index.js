@@ -69,11 +69,9 @@ function Navs() {
             }
           />
            
-          <Route path="/cartpage" element={<CartPage />} />
-          <Route path="/aboutPage" element={<AboutPage />} />
-          {/* <Route path="/testfile " element={<TestFile />} /> */}
-
-          {/* <CartPage /> */}
+          {/* <Route path="/cartpage" element={<CartPage />} />
+          <Route path="/aboutPage" element={<AboutPage />} /> */}
+          
         </Routes>
       </Router>
     </div>

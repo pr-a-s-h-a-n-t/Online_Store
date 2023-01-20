@@ -30,12 +30,27 @@ function CartPage() {
 
   // fetch data from database
   let userInfo = JSON.parse(localStorage.getItem("user"));
-  let customer_id = userInfo.uid;
-  let customer_name = userInfo.displayName;
-  let user_id = userInfo.uid;
+  let customer_id;
+  let customer_name;
+  let user_id;
+  try { 
+  customer_id = userInfo.uid;
+  customer_name = userInfo.displayName;
+  user_id = userInfo.uid;}
+  catch(err){
+    console.error("user not found");
+  }
   // console.log(user_id);
 
   const fetchData = async () => {
+
+    let cart_products = JSON.parse(localStorage.getItem("cartProducts"));
+     
+
+      setCartProducts(cart_products);
+     
+
+    // console.log(cart_products, "ssss");
     const q = await query(
       collection(db, "cartproducts"),
       where("customer_id", "==", customer_id)
@@ -47,8 +62,10 @@ function CartPage() {
           myProducts.push({ ...doc.data(), id: doc.id });
         });
         setCartProducts(myProducts);
+        localStorage.setItem("cartproducts", JSON.stringify(myProducts));
       });
       // console.log("cart products", cartProducts);
+
 
       await handlePrice();
     } catch (e) {
@@ -109,11 +126,7 @@ function CartPage() {
       console.log(doc.id, " => ", doc.data());
       deleteDoc(doc.ref);
     });
-
-    // const arr = cartProducts.filter(
-    //   (item) => item.product_id !== id.product_id
-    // );
-    // setCartProducts(arr);
+  // localStorage.setItem("cartproducts", JSON.stringify(querySnapshot));
   };
 
   const handlePrice = () => {
