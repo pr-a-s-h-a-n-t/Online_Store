@@ -17,16 +17,11 @@ import { useNavigate } from "react-router-dom";
 import ModeToggle from "../components/common/ModeToggle";
 import { DarkmodeContext } from "../contex/darkmode/index";
 import { Login } from "@mui/icons-material";
-import Footer from "../components/common/footer/index";
 
 const pages = [
   {
-    name: "Home",
-    path: "/",
-  },
-  {
-    name: "Shop",
-    path: "/shop",
+    name: "Dashboard",
+    path: "/admin",
   },
 
   {
@@ -34,13 +29,10 @@ const pages = [
     path: "/profile",
   },
   {
-    name: "Cart",
-    path: "/cart",
+    name: "Add Products",
+    path: "/admin/addproduct",
   },
-  {
-    name: "LogIn",
-    path: "/auth",
-  },
+
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -266,8 +258,7 @@ function HocNavigation({ children }) {
           </Toolbar>
         </Container>
       </AppBar>
-     <div>  {children}</div>
-     {/* <div><Footer /></div> */}
+      {children}
     </div>
   );
 }

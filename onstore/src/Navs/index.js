@@ -15,7 +15,10 @@ import Account from "../components/pages/Account";
 import Profile from "../components/pages/Account";
 import UserAuth from "../components/pages/authPage/index";
 import TestFile from "../components/test";
-
+import Dashboard from "../components/pages/Seller/Dashboard";
+import AddProduct from "../components/pages/Seller/AddProduct";
+import SellerHOCNav from "../Hoc/SellerHOCNav";
+import SHop from "../components/pages/Customer/shop/Products/index";
 
 function Navs() {
   return (
@@ -32,17 +35,25 @@ function Navs() {
               </HocNavigation>
             }
           />
-           <Route
+          <Route
             path="/auth"
             // index
             element={
               <HocNavigation>
                 <UserAuth />
               </HocNavigation>
-            } />
-          {/* <Route path="/" element={<LandingPage />} /> */}
-          {/* <HocNavigation /> */}
-          {/* <LandingPage /> */}
+            }
+          />
+          <Route
+            Route
+            path="/shop"
+            element={
+              <HocNavigation>
+                <SHop />
+              </HocNavigation>
+            }
+          />
+
           <Route
             Route
             path="/cart"
@@ -68,10 +79,24 @@ function Navs() {
               </HocNavigation>
             }
           />
-           
-          {/* <Route path="/cartpage" element={<CartPage />} />
-          <Route path="/aboutPage" element={<AboutPage />} /> */}
-          
+
+          <Route
+            path="/admin"
+            element={
+              <SellerHOCNav>
+                {" "}
+                <Dashboard />
+              </SellerHOCNav>
+            }
+          />
+          <Route
+            path="/admin/addproduct"
+            element={
+              <SellerHOCNav>
+                <AddProduct />
+              </SellerHOCNav>
+            }
+          />
         </Routes>
       </Router>
     </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { DarkmodeContext } from "../../../../contex/darkmode/index";
-import loadingGif from "../../../../assets/loading.gif";
+import { DarkmodeContext } from "../../../../../contex/darkmode/index";
+import loadingGif from "../../../../../assets/loading.gif";
 import { Grid } from "@mui/material";
 import ProductCard from "./ProductCard/index";
 //  import Card from "../Testproduct/Card";
-import loadingPrimarycolorThem from "../../../../assets/loadingPrimarycolorThem.gif";
+import loadingPrimarycolorThem from "../../../../../assets/loadingPrimarycolorThem.gif";
 
 import {
   collection,
@@ -16,9 +16,9 @@ import {
   getDoc,
   addDoc,
 } from "firebase/firestore";
-import { db } from "../../../../firebaseConfig/index";
+import { db } from "../../../../../firebaseConfig/index";
 import { v4 as uuid } from "uuid";
-import { Notification } from "../../../../utils/Notifications";
+import { Notification } from "../../../../../utils/Notifications";
 import { useNavigate } from "react-router-dom";
 import { async } from "@firebase/util";
 function Products() {

@@ -1,16 +1,14 @@
 import React from "react";
-// import Navigation from "../pages/landingpageSection/navigation/index"
-import Footer from "./landingpageSection/footer";
+
+import Footer from "../../components/common/footer/index";
 import Hero from "./landingpageSection/hero";
-import Products from "./landingpageSection/Products";
 
 function LandingPage() {
   return (
     <div>
       <Hero />
 
-      <Products />
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }

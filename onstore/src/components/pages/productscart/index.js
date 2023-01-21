@@ -5,6 +5,18 @@ import { Notification } from "../../../utils/Notifications";
 import Cart from "./Cart";
 import { Button, Grid, Typography } from "@mui/material";
 import "./Cart.css";
+import loadingPrimarycolorThem from "../../../assets/loadingPrimarycolorThem.gif";
+
+// {state.mode === "dark" ?
+//             <div>
+//             <img
+//               width="100%"
+//               src={loadingPrimarycolorThem}
+//               alt="Loading Cart Items"
+//             />
+//             </div>
+//             : <img width="100%" src={loadingGif} alt="Loading Cart Items" />
+//             }
 
 import {
   query,
@@ -33,22 +45,19 @@ function CartPage() {
   let customer_id;
   let customer_name;
   let user_id;
-  try { 
-  customer_id = userInfo.uid;
-  customer_name = userInfo.displayName;
-  user_id = userInfo.uid;}
-  catch(err){
+  try {
+    customer_id = userInfo.uid;
+    customer_name = userInfo.displayName;
+    user_id = userInfo.uid;
+  } catch (err) {
     console.error("user not found");
   }
   // console.log(user_id);
 
   const fetchData = async () => {
-
     let cart_products = JSON.parse(localStorage.getItem("cartProducts"));
-     
 
-      setCartProducts(cart_products);
-     
+    setCartProducts(cart_products);
 
     // console.log(cart_products, "ssss");
     const q = await query(
@@ -65,7 +74,6 @@ function CartPage() {
         localStorage.setItem("cartproducts", JSON.stringify(myProducts));
       });
       // console.log("cart products", cartProducts);
-
 
       await handlePrice();
     } catch (e) {
@@ -126,7 +134,7 @@ function CartPage() {
       console.log(doc.id, " => ", doc.data());
       deleteDoc(doc.ref);
     });
-  // localStorage.setItem("cartproducts", JSON.stringify(querySnapshot));
+    // localStorage.setItem("cartproducts", JSON.stringify(querySnapshot));
   };
 
   const handlePrice = () => {
@@ -167,9 +175,25 @@ function CartPage() {
                 );
               })}
             </div>
+          ) : state.mode === "dark" ? (
+            <div
+              style={{
+                width: "90%",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "auto",
+              }}
+            >
+              <img
+                width="40%"
+                src={loadingPrimarycolorThem}
+                alt="Loading Cart Items"
+              />
+            </div>
           ) : (
             <div>
-              <img src={loadingGif} alt="Loading Cart Items" />
+              <img width="40%" src={loadingGif} alt="Loading Cart Items" />
             </div>
           )}
         </Grid>

@@ -1,8 +1,8 @@
 import { Button, Grid } from "@mui/material";
 import React from "react";
 import "./ProductCard.css";
-import { DarkmodeContext } from "../../../../../contex/darkmode/index";
-import Notification from "../../../../../utils/Notifications";
+import { DarkmodeContext } from "../../../../../../contex/darkmode/index";
+import Notification from "../../../../../../utils/Notifications";
 function SolutionCard({ product, addToCart }) {
   const [state, dispatch] = React.useContext(DarkmodeContext);
   // console.log("this is a prop product",product );
