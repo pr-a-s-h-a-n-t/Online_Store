@@ -75,7 +75,7 @@ function CartPage() {
       });
       // console.log("cart products", cartProducts);
 
-      await handlePrice();
+      
     } catch (e) {
       console.log(e);
     }
@@ -83,7 +83,7 @@ function CartPage() {
 
   useEffect(() => {
     fetchData();
-    handlePrice();
+    // handlePrice();
   }, []);
 
   // updating the quantity of cart products.
