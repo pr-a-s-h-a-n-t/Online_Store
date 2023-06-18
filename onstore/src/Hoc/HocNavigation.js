@@ -70,23 +70,23 @@ function HocNavigation({ children }) {
     navigate(`${path}`);
   };
 
-  let user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
+  const userString = localStorage.getItem("user");
+  if (userString) {
+    try {
+      user = JSON.parse(userString);
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+    }
+  }
+
   let filterNav;
 
   if (user) {
-    filterNav = pages.filter((page) => {
-      return page.name !== "LogIn";
-    });
-
-    // console.log("this is filternav", filterNav);
+    filterNav = pages.filter((page) => page.name !== "LogIn");
   } else {
-    filterNav = pages.filter((page) => {
-      return page.name !== "Profile";
-    });
-
-    // console.log("this is filternav", filterNav);
+    filterNav = pages.filter((page) => page.name !== "Profile");
   }
-  // console.log("this is all nav",pages);
 
   return (
     <div
@@ -266,8 +266,8 @@ function HocNavigation({ children }) {
           </Toolbar>
         </Container>
       </AppBar>
-     <div>  {children}</div>
-     {/* <div><Footer /></div> */}
+      <div> {children}</div>
+      {/* <div><Footer /></div> */}
     </div>
   );
 }
