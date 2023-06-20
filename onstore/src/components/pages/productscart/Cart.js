@@ -1,25 +1,23 @@
+import React, { useEffect } from "react";
 import { Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import "./Cart.css";
-import shoppingBasket from "../../../assets/shoppingBasket.png";
 import { DarkmodeContext } from "../../../contex/darkmode/index";
+import shoppingBasket from "../../../assets/shoppingBasket.png";
+import "./Cart.css";
 
-const Cart = ({
-  cartProducts,
-  handleRemove,
-  price,
-  setCartProducts,
-  handleChange,
-  handlePrice,
-}) => {
-  // const [price, setPrice] = useState(0);
-  const [state, dispatch] = React.useContext(DarkmodeContext);
+const Cart = ({ cartProducts, handleRemove, handlePrice, handleChange }) => {
+  const [state] = React.useContext(DarkmodeContext);
 
   useEffect(() => {
     handlePrice();
-  })
-  
+  }, []);
+
+  if (!cartProducts) {
+    return <div>Loading cart...</div>;
+  }
+
+  if (cartProducts.length === 0) {
+    return <div>Your cart is empty.</div>;
+  }
 
   return (
     <Grid
@@ -29,105 +27,90 @@ const Cart = ({
       style={{
         color: state.shades.secondary,
         backgroundColor: state.shades.primary,
-        // candidateapplicationrowcard
-        // candidateapplication
       }}
     >
-      <div
-        style={{
-          color: state.shades.secondary,
-          backgroundColor: state.shades.candidateapplication,
-          padding: "1rem",
-          // candidateapplicationrowcard
-          // candidateapplication
-        }}
-        className="container"
-      >
-        <Grid rowSpacing={2} container className="cart_box">
-          <Grid item xs={12} md={12} lg={5} columnGap={1} className="cart_img">
-            <img alt="" src={cartProducts.productImage} />
-            <Grid item xs={12} md={5} lg={8} className="cart_para">
-              <p>{cartProducts.productName}</p>
-            </Grid>
-          </Grid>
-
+      <div className="container">
+        {cartProducts.map((cartProduct) => (
           <Grid
-            // item
-            item
-            xs={12}
-            md={6}
-            lg={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+            key={cartProduct.productId}
+            rowSpacing={2}
+            container
+            className="cart_box"
           >
-            <Button
-              variant="contained"
-              sx={{
-                color: "inherit",
-                fontWeight: "bold",
-                marginRight: "10px",
-                backgroundColor: "inherit",
-              }}
-              onClick={() => {
-                handleChange(cartProducts, +1);
-                console.log("this is cart products", cartProducts);
-              }}
+            <Grid
+              item
+              xs={12}
+              md={12}
+              lg={5}
+              columnGap={1}
+              className="cart_img"
             >
-              +
-            </Button>
-            <Typography fontWeight="bold">
-              {cartProducts.product_amount}
-            </Typography>
-            <Button
-              sx={{
-                color: "inherit",
-                fontWeight: "bold",
-                marginLeft: "10px",
-                backgroundColor: "inherit",
-              }}
-              variant="contained"
-              onClick={() => handleChange(cartProducts, -1)}
+              <img alt="" src={cartProduct.productImage} />
+              <Grid item xs={12} md={5} lg={8} className="cart_para">
+                <p>{cartProduct.productName}</p>
+              </Grid>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={3}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              {" "}
-              -
-            </Button>
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <h1>{cartProducts.productPrice}$</h1>
-            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                sx={{
+                  color: "inherit",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                  backgroundColor: "inherit",
+                }}
+                onClick={() => {
+                  handleChange(cartProduct, +1);
+                  console.log("this is cart product", cartProduct);
+                }}
+              >
+                +
+              </Button>
+              <Typography fontWeight="bold">
+                {cartProduct.product_amount}
+              </Typography>
               <Button
                 sx={{
-                  color: "white",
+                  color: "inherit",
                   fontWeight: "bold",
-                  backgroundColor: "red",
+                  marginLeft: "10px",
+                  backgroundColor: "inherit",
                 }}
                 variant="contained"
-                onClick={() => handleRemove(cartProducts)}
+                onClick={() => handleChange(cartProduct, -1)}
               >
-                Remove
+                {" "}
+                -
               </Button>
             </Grid>
+            <Grid item xs={12} md={2}>
+              <h1>{cartProduct.productPrice}$</h1>
+              <Grid item xs={12}>
+                <Button
+                  sx={{
+                    color: "white",
+                    fontWeight: "bold",
+                    backgroundColor: "red",
+                  }}
+                  variant="contained"
+                  onClick={() => handleRemove(cartProduct)}
+                >
+                  Remove
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-        {/* ))} */}
+        ))}
       </div>
-      {/* <Grid item xs={8} md={4} lg={4} margin="auto">
-        {" "}
-        <div
-          className="total-price"
-          style={{
-            color: state.shades.secondary,
-            // backgroundColor: state.shades.candidateapplicationrowcard,
-            // candidateapplicationrowcard
-            // candidateapplication
-            marginTop: "5px",
-          }}
-        >
-          <Typography fontWeight="bold">Total</Typography>
-          <Typography fontWeight="bold">{price}$</Typography>
-        </div>
-      </Grid> */}
     </Grid>
   );
 };

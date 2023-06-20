@@ -1,37 +1,21 @@
 import React, { useEffect, useState } from "react";
 import loadingGif from "../../../assets/loading.gif";
-// import ItemCard from "./ItemCard";
-import { Notification } from "../../../utils/Notifications";
 import Cart from "./Cart";
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import "./Cart.css";
 import loadingPrimarycolorThem from "../../../assets/loadingPrimarycolorThem.gif";
-
-// {state.mode === "dark" ?
-//             <div>
-//             <img
-//               width="100%"
-//               src={loadingPrimarycolorThem}
-//               alt="Loading Cart Items"
-//             />
-//             </div>
-//             : <img width="100%" src={loadingGif} alt="Loading Cart Items" />
-//             }
 
 import {
   query,
   where,
   collection,
   getDocs,
-  getDoc,
   onSnapshot,
-  setDoc,
   doc,
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig/index";
-import { v4 as uuid } from "uuid";
 import { DarkmodeContext } from "../../../contex/darkmode/index";
 import { reload } from "firebase/auth";
 
@@ -40,27 +24,29 @@ function CartPage() {
   const [cartProducts, setCartProducts] = useState([]);
   const [price, setPrice] = useState(0);
 
-  // fetch data from database
-  let userInfo = JSON.parse(localStorage.getItem("user"));
+  let userInfo = localStorage.getItem("user");
   let customer_id;
   let customer_name;
   let user_id;
   try {
-    customer_id = userInfo.uid;
-    customer_name = userInfo.displayName;
-    user_id = userInfo.uid;
+    if (userInfo) {
+      const parsedUserInfo = JSON.parse(userInfo);
+      customer_id = parsedUserInfo.uid;
+      customer_name = parsedUserInfo.displayName;
+      user_id = parsedUserInfo.uid;
+    } else {
+      console.error("user not found");
+    }
   } catch (err) {
-    console.error("user not found");
+    console.error("error parsing user JSON");
   }
-  // console.log(user_id);
 
   const fetchData = async () => {
     let cart_products = JSON.parse(localStorage.getItem("cartProducts"));
 
     setCartProducts(cart_products);
 
-    // console.log(cart_products, "ssss");
-    const q = await query(
+    const q = query(
       collection(db, "cartproducts"),
       where("customer_id", "==", customer_id)
     );
@@ -71,11 +57,8 @@ function CartPage() {
           myProducts.push({ ...doc.data(), id: doc.id });
         });
         setCartProducts(myProducts);
-        localStorage.setItem("cartproducts", JSON.stringify(myProducts));
+        localStorage.setItem("cartProducts", JSON.stringify(myProducts));
       });
-      // console.log("cart products", cartProducts);
-
-      
     } catch (e) {
       console.log(e);
     }
@@ -83,17 +66,9 @@ function CartPage() {
 
   useEffect(() => {
     fetchData();
-    // handlePrice();
   }, []);
 
-  // updating the quantity of cart products.
   const handleChange = async (cartItem, d) => {
-    console.log(
-      "i am receiving handlechange req for this product",
-      cartItem,
-      d
-    );
-
     let amount = Number(cartItem.product_amount);
     if (amount >= 1) {
       if (d === 1) {
@@ -103,48 +78,39 @@ function CartPage() {
         amount = amount - 1;
       }
 
-      let collection_id = cartItem.id;
-      const productRef = await doc(db, "cartproducts", collection_id);
+      const productRef = doc(db, "cartproducts", cartItem.id);
       await updateDoc(productRef, {
         product_amount: Number(amount),
       });
     }
     if (amount === 0) {
-      let collection_id = cartItem.id;
-      const productRef = await doc(db, "cartproducts", collection_id);
+      const productRef = doc(db, "cartproducts", cartItem.id);
       await updateDoc(productRef, {
         product_amount: 1,
       });
     }
   };
 
-  // Remove product from cart!!!
   const handleRemove = async (id) => {
-    console.log("handle remove", id);
     let temp_id = id.product_id;
-    // delete cartproduct.
 
-    const q = await query(
+    const q = query(
       collection(db, "cartproducts"),
       where("product_id", "==", temp_id)
     );
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      deleteDoc(doc.ref);
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
     });
-    // localStorage.setItem("cartproducts", JSON.stringify(querySnapshot));
+    handlePrice();
   };
 
   const handlePrice = () => {
     let ans = 0;
-    cartProducts.map(
-      (cartProducts) =>
-        (ans += cartProducts.product_amount * cartProducts.productPrice)
-    );
+    cartProducts.forEach((cartProduct) => {
+      ans += cartProduct.product_amount * cartProduct.productPrice;
+    });
     setPrice(Math.round(ans));
-    console.log("this is total data", price);
   };
 
   return (
@@ -152,30 +118,26 @@ function CartPage() {
       style={{
         color: state.shades.secondary,
         backgroundColor: state.shades.primary,
-        // candidateapplicationrowcard
-        // candidateapplication
       }}
     >
       <Grid container>
-        <Grid item xs={8} md={4} lg={12} margin="auto">
+        <Grid item xs={12} md={8} lg={8} margin="auto">
           {cartProducts && cartProducts.length === 0 ? (
             <div>Your Cart Is Empty</div>
           ) : cartProducts && cartProducts.length > 0 ? (
             <div>
-              {cartProducts.map((cartProducts, i) => {
-                return (
-                  <Cart
-                    key={i}
-                    handleChange={handleChange}
-                    handleRemove={handleRemove}
-                    handlePrice={handlePrice}
-                    price={price}
-                    cartProducts={cartProducts}
-                  />
-                );
-              })}
+              {cartProducts.map((cartProduct, i) => (
+                <Cart
+                  key={i}
+                  handleChange={handleChange}
+                  handleRemove={handleRemove}
+                  handlePrice={handlePrice}
+                  price={price}
+                  cartProduct={cartProduct}
+                />
+              ))}
             </div>
-          ) : state.mode === "dark" ? (
+          ) : (
             <div
               style={{
                 width: "90%",
@@ -187,25 +149,19 @@ function CartPage() {
             >
               <img
                 width="40%"
-                src={loadingPrimarycolorThem}
+                src={
+                  state.mode === "dark" ? loadingPrimarycolorThem : loadingGif
+                }
                 alt="Loading Cart Items"
               />
             </div>
-          ) : (
-            <div>
-              <img width="40%" src={loadingGif} alt="Loading Cart Items" />
-            </div>
           )}
         </Grid>
-        <Grid item xs={8} md={4} lg={4} margin=" 2rem auto">
-          {" "}
+        <Grid item xs={12} md={4} lg={4} margin="2rem auto">
           <div
             className="total-price"
             style={{
               color: state.shades.secondary,
-              // backgroundColor: state.shades.candidateapplicationrowcard,
-              // candidateapplicationrowcard
-              // candidateapplication
               marginTop: "5px",
             }}
           >
